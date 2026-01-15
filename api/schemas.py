@@ -56,6 +56,14 @@ class ProviderTotalResponse(BaseModel):
     currency: str
 
 
+class DeltaGroupResponse(BaseModel):
+    key: str
+    current_cost: float
+    previous_cost: float
+    delta: float
+    delta_ratio: Optional[float] = None
+
+
 class TagCoverageResponse(BaseModel):
     required_tags: List[str]
     total_cost: float

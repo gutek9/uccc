@@ -357,6 +357,26 @@ body {
   background: var(--accent);
 }
 
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #2e2727;
+  background: #171313;
+  margin-bottom: 10px;
+}
+
+.metric-row span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.metric-row strong {
+  font-size: 1rem;
+}
+
 .panel-header {
   display: flex;
   justify-content: space-between;

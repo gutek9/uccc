@@ -15,6 +15,7 @@ from api.schemas import (
     DataFreshnessResponse,
     GroupedCostResponse,
     ProviderBreakdownResponse,
+    DeltaGroupResponse,
     ProviderTotalResponse,
     TagCoverageByProviderResponse,
     TagCoverageResponse,
@@ -273,6 +274,66 @@ def breakdowns(
             )
         )
     return response
+
+
+def _grouped_delta(
+    session: Session,
+    group_by,
+    start: date,
+    end: date,
+    prev_start: date,
+    prev_end: date,
+    provider: Optional[str],
+    limit: int,
+):
+    current = crud.get_grouped_cost(session, start, end, group_by, provider=provider)
+    previous = crud.get_grouped_cost(session, prev_start, prev_end, group_by, provider=provider)
+    current_map = {row[0]: row[1] for row in current}
+    previous_map = {row[0]: row[1] for row in previous}
+    keys = set(current_map) | set(previous_map)
+    deltas: list[DeltaGroupResponse] = []
+    for key in keys:
+        curr = current_map.get(key, 0.0)
+        prev = previous_map.get(key, 0.0)
+        delta = curr - prev
+        ratio = None if prev == 0 else delta / prev
+        deltas.append(
+            DeltaGroupResponse(
+                key=key,
+                current_cost=curr,
+                previous_cost=prev,
+                delta=delta,
+                delta_ratio=ratio,
+            )
+        )
+    deltas.sort(key=lambda item: item.delta, reverse=True)
+    return deltas[:limit]
+
+
+@app.get("/costs/deltas/by-service", response_model=List[DeltaGroupResponse])
+def deltas_by_service(
+    from_date: date = Query(alias="from"),
+    to_date: date = Query(alias="to"),
+    compare_from: date = Query(alias="compare_from"),
+    compare_to: date = Query(alias="compare_to"),
+    provider: Optional[str] = None,
+    limit: int = 5,
+    session: Session = Depends(get_session),
+):
+    return _grouped_delta(session, CostEntry.service, from_date, to_date, compare_from, compare_to, provider, limit)
+
+
+@app.get("/costs/deltas/by-account", response_model=List[DeltaGroupResponse])
+def deltas_by_account(
+    from_date: date = Query(alias="from"),
+    to_date: date = Query(alias="to"),
+    compare_from: date = Query(alias="compare_from"),
+    compare_to: date = Query(alias="compare_to"),
+    provider: Optional[str] = None,
+    limit: int = 5,
+    session: Session = Depends(get_session),
+):
+    return _grouped_delta(session, CostEntry.account_id, from_date, to_date, compare_from, compare_to, provider, limit)
 
 
 @app.get("/costs/tag-hygiene", response_model=TagHygieneResponse)

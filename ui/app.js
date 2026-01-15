@@ -21,6 +21,10 @@ const sparklineEl = document.getElementById("costSparkline");
 const topServicesEl = document.getElementById("topServices");
 const topAccountsEl = document.getElementById("topAccounts");
 const tagCoverageByProviderEl = document.getElementById("tagCoverageByProvider");
+const wowDeltaEl = document.getElementById("wowDelta");
+const momDeltaEl = document.getElementById("momDelta");
+const topServiceDeltasEl = document.getElementById("topServiceDeltas");
+const topAccountDeltasEl = document.getElementById("topAccountDeltas");
 const barFully = document.getElementById("barFully");
 const barPartial = document.getElementById("barPartial");
 const barUntagged = document.getElementById("barUntagged");
@@ -234,6 +238,46 @@ function renderTagCoverageByProvider(rows, currencyMap) {
   });
 }
 
+function renderDeltaList(container, rows, currency = "USD") {
+  container.innerHTML = "";
+  if (!rows.length) {
+    container.innerHTML = "<li>No data</li>";
+    return;
+  }
+  rows.forEach((row) => {
+    const li = document.createElement("li");
+    const pct = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
+    const sign = row.delta >= 0 ? "+" : "";
+    li.innerHTML = `<span>${row.key}</span><strong>${sign}${formatCost(row.delta, currency)} (${pct})</strong>`;
+    container.appendChild(li);
+  });
+}
+
+function formatDelta(current, previous, currency = "USD") {
+  const delta = current - previous;
+  const ratio = previous === 0 ? null : delta / previous;
+  const sign = delta >= 0 ? "+" : "";
+  const pct = ratio === null ? "—" : `${(ratio * 100).toFixed(1)}%`;
+  return `${sign}${formatCost(delta, currency)} (${pct})`;
+}
+
+function getPrevMonthStart() {
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  return toISODate(start);
+}
+
+function getPrevMonthEnd() {
+  const today = new Date();
+  const end = new Date(today.getFullYear(), today.getMonth(), 0);
+  return toISODate(end);
+}
+
+function getProviderTotal(rows, provider) {
+  const match = rows.find((row) => row.provider === provider);
+  return match ? match.total_cost : 0;
+}
+
 async function refreshData() {
   const fromDate = fromInput.value;
   const toDate = toInput.value;
@@ -264,6 +308,10 @@ async function refreshData() {
       tagCoverageByProvider,
       trendRows,
       breakdowns,
+      prevWeekByProvider,
+      prevMonthByProvider,
+      serviceDeltas,
+      accountDeltas,
       tagHygiene,
       anomalies,
       freshness,
@@ -284,6 +332,26 @@ async function refreshData() {
           rangeQuery,
           `provider=${activeProvider}&limit=${SERVICE_PAGE_SIZE}&offset=${serviceOffset}&account_offset=${accountOffset}`
         )}`
+      ),
+      fetchJson(
+        `/costs/provider-totals?from=${toISODate(new Date(Date.now() - 13 * 86400000))}&to=${toISODate(
+          new Date(Date.now() - 7 * 86400000)
+        )}`
+      ),
+      fetchJson(`/costs/provider-totals?from=${getPrevMonthStart()}&to=${getPrevMonthEnd()}`),
+      fetchJson(
+        `/costs/deltas/by-service?from=${toISODate(new Date(Date.now() - 6 * 86400000))}&to=${toISODate(
+          new Date()
+        )}&compare_from=${toISODate(new Date(Date.now() - 13 * 86400000))}&compare_to=${toISODate(
+          new Date(Date.now() - 7 * 86400000)
+        )}&provider=${activeProvider}&limit=5`
+      ),
+      fetchJson(
+        `/costs/deltas/by-account?from=${toISODate(new Date(Date.now() - 6 * 86400000))}&to=${toISODate(
+          new Date()
+        )}&compare_from=${toISODate(new Date(Date.now() - 13 * 86400000))}&compare_to=${toISODate(
+          new Date(Date.now() - 7 * 86400000)
+        )}&provider=${activeProvider}&limit=5`
       ),
       fetchJson(`/costs/tag-hygiene${rangeQuery}`),
       fetchJson(`/costs/anomalies${rangeQuery}`),
@@ -320,6 +388,15 @@ async function refreshData() {
     renderList(breakdownServicesEl, breakdown ? breakdown.services : []);
     renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : []);
     updatePagerButtons(breakdown);
+    const activeCurrency = currencyMap[activeProvider] || "USD";
+    const activeWeekTotal = getProviderTotal(weekByProvider, activeProvider);
+    const activeMonthTotal = getProviderTotal(monthByProvider, activeProvider);
+    const activePrevWeekTotal = getProviderTotal(prevWeekByProvider, activeProvider);
+    const activePrevMonthTotal = getProviderTotal(prevMonthByProvider, activeProvider);
+    wowDeltaEl.textContent = formatDelta(activeWeekTotal, activePrevWeekTotal, activeCurrency);
+    momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
+    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency);
+    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency);
     renderTagCoverage(tagHygiene.coverage);
     renderUntagged(tagHygiene.untagged_entries);
     renderAnomalies(anomalies);
