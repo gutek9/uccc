@@ -95,3 +95,13 @@ def get_freshness(session: Session):
         .order_by(CostEntry.provider)
     )
     return session.execute(stmt).all()
+
+
+def get_provider_totals_with_currency(session: Session, start: date, end: date):
+    stmt = (
+        select(CostEntry.provider, CostEntry.currency, func.sum(CostEntry.cost))
+        .where(CostEntry.date.between(start, end))
+        .group_by(CostEntry.provider, CostEntry.currency)
+        .order_by(CostEntry.provider, func.sum(CostEntry.cost).desc())
+    )
+    return session.execute(stmt).all()

@@ -35,10 +35,10 @@ let servicePageIndex = 0;
 let accountPageIndex = 0;
 let activeProvider = "aws";
 
-function formatCost(value) {
+function formatCost(value, currency = "USD") {
   const formatter = new Intl.NumberFormat(undefined, {
     style: "currency",
-    currency: "USD",
+    currency,
     notation: value >= 10000 ? "compact" : "standard",
     maximumFractionDigits: value >= 10000 ? 1 : 2,
   });
@@ -65,7 +65,9 @@ function renderList(container, rows) {
   }
   rows.forEach((row) => {
     const li = document.createElement("li");
-    li.innerHTML = `<span>${row.key}</span><strong>${formatCost(row.total_cost)}</strong>`;
+    const label = row.key ?? row.provider ?? "—";
+    const currency = row.currency || "USD";
+    li.innerHTML = `<span>${label}</span><strong>${formatCost(row.total_cost, currency)}</strong>`;
     container.appendChild(li);
   });
 }
@@ -164,7 +166,9 @@ function renderSummarySplit(container, rows) {
   rows.forEach((row) => {
     const chip = document.createElement("div");
     chip.className = "summary-chip";
-    chip.innerHTML = `<strong>${row.key}</strong><span>${formatCost(row.total_cost)}</span>`;
+    const label = row.key ?? row.provider ?? "—";
+    const currency = row.currency || "USD";
+    chip.innerHTML = `<strong>${label}</strong><span>${formatCost(row.total_cost, currency)}</span>`;
     container.appendChild(chip);
   });
 }
@@ -198,7 +202,7 @@ function renderSparkline(points) {
   sparklineEl.appendChild(line);
 }
 
-function renderTagCoverageByProvider(rows) {
+function renderTagCoverageByProvider(rows, currencyMap) {
   tagCoverageByProviderEl.innerHTML = "";
   if (!rows.length) {
     tagCoverageByProviderEl.innerHTML = "<div class=\"tag-split\">No data</div>";
@@ -207,6 +211,7 @@ function renderTagCoverageByProvider(rows) {
   rows.forEach((row) => {
     const coverage = row.coverage;
     const total = coverage.total_cost || 0;
+    const currency = currencyMap[row.provider] || "USD";
     const fullyPct = total ? (coverage.fully_tagged_cost / total) * 100 : 0;
     const partialPct = total ? (coverage.partially_tagged_cost / total) * 100 : 0;
     const untaggedPct = total ? (coverage.untagged_cost / total) * 100 : 0;
@@ -216,7 +221,7 @@ function renderTagCoverageByProvider(rows) {
     container.innerHTML = `
       <header>
         <span>${row.provider}</span>
-        <span>${formatCost(total)}</span>
+        <span>${formatCost(total, currency)}</span>
       </header>
       <div class="bar-track"><div class="bar-fill" style="width:${fullyPct.toFixed(1)}%"></div></div>
       <div class="bar-track"><div class="bar-fill" style="width:${partialPct.toFixed(1)}%; background:#f08a6b"></div></div>
@@ -250,7 +255,7 @@ async function refreshData() {
       todayByProvider,
       weekByProvider,
       monthByProvider,
-      byProvider,
+      providerTotalsRange,
       topServices,
       topAccounts,
       tagCoverageByProvider,
@@ -263,10 +268,10 @@ async function refreshData() {
       fetchJson(`/costs/total${todayQuery}`),
       fetchJson(`/costs/total${weekQuery}`),
       fetchJson(`/costs/total${monthQuery}`),
-      fetchJson(`/costs/by-provider${todayQuery}`),
-      fetchJson(`/costs/by-provider${weekQuery}`),
-      fetchJson(`/costs/by-provider${monthQuery}`),
-      fetchJson(`/costs/by-provider${rangeQuery}`),
+      fetchJson(`/costs/provider-totals${todayQuery}`),
+      fetchJson(`/costs/provider-totals${weekQuery}`),
+      fetchJson(`/costs/provider-totals${monthQuery}`),
+      fetchJson(`/costs/provider-totals${rangeQuery}`),
       fetchJson(`/costs/by-service${rangeQuery}&limit=5&offset=0`),
       fetchJson(`/costs/by-account${rangeQuery}&limit=5&offset=0`),
       fetchJson(`/costs/tag-hygiene/by-provider${rangeQuery}`),
@@ -289,10 +294,14 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider);
     renderSummarySplit(monthSplitEl, monthByProvider);
 
-    renderSummarySplit(providerSummaryEl, byProvider);
+    renderSummarySplit(providerSummaryEl, providerTotalsRange);
     renderList(topServicesEl, topServices);
     renderList(topAccountsEl, topAccounts);
-    renderTagCoverageByProvider(tagCoverageByProvider);
+    const currencyMap = providerTotalsRange.reduce((acc, row) => {
+      acc[row.provider] = row.currency || "USD";
+      return acc;
+    }, {});
+    renderTagCoverageByProvider(tagCoverageByProvider, currencyMap);
 
     const trendTotals = {};
     trendRows.forEach((row) => {
@@ -307,6 +316,7 @@ async function refreshData() {
     const breakdown = breakdowns[0];
     renderList(breakdownServicesEl, breakdown ? breakdown.services : []);
     renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : []);
+    updatePagerButtons(breakdown);
     renderTagCoverage(tagHygiene.coverage);
     renderUntagged(tagHygiene.untagged_entries);
     renderAnomalies(anomalies);
@@ -316,6 +326,20 @@ async function refreshData() {
   } catch (error) {
     console.error(error);
   }
+}
+
+function updatePagerButtons(breakdown) {
+  const svcPrev = document.querySelector('.pager-btn[data-svc="prev"]');
+  const svcNext = document.querySelector('.pager-btn[data-svc="next"]');
+  const acctPrev = document.querySelector('.pager-btn[data-acct="prev"]');
+  const acctNext = document.querySelector('.pager-btn[data-acct="next"]');
+  const servicesCount = breakdown ? breakdown.services.length : 0;
+  const accountsCount = breakdown ? breakdown.accounts.length : 0;
+
+  svcPrev.disabled = servicePageIndex === 0;
+  acctPrev.disabled = accountPageIndex === 0;
+  svcNext.disabled = servicesCount < SERVICE_PAGE_SIZE;
+  acctNext.disabled = accountsCount < ACCOUNT_PAGE_SIZE;
 }
 
 function initDateInputs() {

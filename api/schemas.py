@@ -50,6 +50,12 @@ class ProviderBreakdownResponse(BaseModel):
     accounts: List[GroupedCostResponse]
 
 
+class ProviderTotalResponse(BaseModel):
+    provider: str
+    total_cost: float
+    currency: str
+
+
 class TagCoverageResponse(BaseModel):
     required_tags: List[str]
     total_cost: float

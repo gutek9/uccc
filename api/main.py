@@ -15,6 +15,7 @@ from api.schemas import (
     DataFreshnessResponse,
     GroupedCostResponse,
     ProviderBreakdownResponse,
+    ProviderTotalResponse,
     TagCoverageByProviderResponse,
     TagCoverageResponse,
     TagHygieneResponse,
@@ -80,6 +81,30 @@ def by_provider(
     start, end = parse_date_range(from_date, to_date)
     rows = crud.get_grouped_cost(session, start, end, CostEntry.provider)
     return [GroupedCostResponse(key=row[0], total_cost=row[1]) for row in rows]
+
+
+@app.get("/costs/provider-totals", response_model=List[ProviderTotalResponse])
+def provider_totals(
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    rows = crud.get_provider_totals_with_currency(session, start, end)
+    totals: list[ProviderTotalResponse] = []
+    seen = set()
+    for provider, currency, total in rows:
+        if provider in seen:
+            continue
+        totals.append(
+            ProviderTotalResponse(
+                provider=provider,
+                total_cost=total or 0.0,
+                currency=currency or "USD",
+            )
+        )
+        seen.add(provider)
+    return totals
 
 
 @app.get("/costs/by-service", response_model=List[GroupedCostResponse])
