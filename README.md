@@ -6,7 +6,7 @@ It is **not** a financial system of record. The goal is fast visibility, anomaly
 
 ## Features
 
-- Daily cost collection (AWS, Azure; GCP stub ready)
+- Daily cost collection (AWS, Azure; GCP skipped for now)
 - Unified schema in PostgreSQL
 - REST API for totals, breakdowns, anomalies, tag hygiene, and data freshness
 - Gravitee-themed UI dashboard
@@ -48,6 +48,8 @@ Create a `.env` file (ignored by git) with your credentials and settings.
 ```
 LOOKBACK_DAYS=90
 ```
+
+`LOOKBACK_DAYS` applies to all collectors (AWS/Azure).
 
 ### Azure (Cost Management API)
 
@@ -109,12 +111,15 @@ COLLECTOR_INTERVAL_SECONDS=86400
 
 - `GET /costs/total?from=YYYY-MM-DD&to=YYYY-MM-DD`
 - `GET /costs/by-provider`
+- `GET /costs/provider-totals`
+- `GET /costs/breakdowns?provider=aws&limit=10&offset=0&account_offset=0`
 - `GET /costs/by-service?provider=aws&limit=10&offset=0`
 - `GET /costs/by-account?provider=azure`
 - `GET /costs/by-tag?tag=owner`
 - `GET /costs/deltas`
 - `GET /costs/anomalies`
 - `GET /costs/tag-hygiene`
+- `GET /costs/tag-hygiene/by-provider`
 - `GET /costs/freshness`
 
 ## Database
