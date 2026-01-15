@@ -14,6 +14,7 @@ from api.schemas import (
     AnomalyResponse,
     DataFreshnessResponse,
     GroupedCostResponse,
+    ProviderBreakdownResponse,
     TagCoverageResponse,
     TagHygieneResponse,
     TotalCostResponse,
@@ -107,10 +108,20 @@ def by_account(
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
     provider: Optional[str] = None,
+    limit: int = 10,
+    offset: int = 0,
     session: Session = Depends(get_session),
 ):
     start, end = parse_date_range(from_date, to_date)
-    rows = crud.get_grouped_cost(session, start, end, CostEntry.account_id, provider=provider)
+    rows = crud.get_grouped_cost(
+        session,
+        start,
+        end,
+        CostEntry.account_id,
+        provider=provider,
+        limit=limit,
+        offset=offset,
+    )
     return [GroupedCostResponse(key=row[0], total_cost=row[1]) for row in rows]
 
 
@@ -191,6 +202,50 @@ def anomalies(
     deltas = day_over_day_deltas(from_date, to_date, session)
     flagged = [item for item in deltas if item.delta_ratio is not None and item.delta_ratio >= threshold]
     return flagged
+
+
+@app.get("/costs/breakdowns", response_model=List[ProviderBreakdownResponse])
+def breakdowns(
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    provider: Optional[str] = None,
+    limit: int = 10,
+    offset: int = 0,
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    providers = [provider] if provider else ["aws", "azure"]
+    totals = {row[0]: row[1] for row in crud.get_grouped_cost(session, start, end, CostEntry.provider)}
+
+    response: List[ProviderBreakdownResponse] = []
+    for item in providers:
+        services = crud.get_grouped_cost(
+            session,
+            start,
+            end,
+            CostEntry.service,
+            provider=item,
+            limit=limit,
+            offset=offset,
+        )
+        accounts = crud.get_grouped_cost(
+            session,
+            start,
+            end,
+            CostEntry.account_id,
+            provider=item,
+            limit=limit,
+            offset=offset,
+        )
+        response.append(
+            ProviderBreakdownResponse(
+                provider=item,
+                total_cost=totals.get(item, 0.0),
+                services=[GroupedCostResponse(key=row[0], total_cost=row[1]) for row in services],
+                accounts=[GroupedCostResponse(key=row[0], total_cost=row[1]) for row in accounts],
+            )
+        )
+    return response
 
 
 @app.get("/costs/tag-hygiene", response_model=TagHygieneResponse)

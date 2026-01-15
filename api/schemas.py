@@ -43,6 +43,13 @@ class AnomalyResponse(BaseModel):
     delta_ratio: Optional[float] = None
 
 
+class ProviderBreakdownResponse(BaseModel):
+    provider: str
+    total_cost: float
+    services: List[GroupedCostResponse]
+    accounts: List[GroupedCostResponse]
+
+
 class TagCoverageResponse(BaseModel):
     required_tags: List[str]
     total_cost: float
