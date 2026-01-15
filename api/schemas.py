@@ -58,6 +58,11 @@ class TagCoverageResponse(BaseModel):
     untagged_cost: float
 
 
+class TagCoverageByProviderResponse(BaseModel):
+    provider: str
+    coverage: TagCoverageResponse
+
+
 class UntaggedCostEntry(BaseModel):
     id: str
     date: date

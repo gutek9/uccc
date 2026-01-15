@@ -24,16 +24,19 @@
           <h2>Today</h2>
           <p class="metric" id="todayTotal">—</p>
           <span class="caption">Total cost</span>
+          <div class="summary-split" id="todaySplit"></div>
         </div>
         <div class="card">
           <h2>Last 7 days</h2>
           <p class="metric" id="weekTotal">—</p>
           <span class="caption">Rolling spend</span>
+          <div class="summary-split" id="weekSplit"></div>
         </div>
         <div class="card">
           <h2>This month</h2>
           <p class="metric" id="monthTotal">—</p>
           <span class="caption">Month-to-date</span>
+          <div class="summary-split" id="monthSplit"></div>
         </div>
       </section>
 
@@ -56,6 +59,31 @@
             <input type="date" id="toDate" />
           </label>
           <button id="refreshBtn">Refresh</button>
+        </div>
+      </section>
+
+      <section class="grid insights">
+        <div class="panel">
+          <h3>Cost Trend (30 days)</h3>
+          <div class="sparkline-wrap">
+            <svg id="costSparkline" viewBox="0 0 300 80" preserveAspectRatio="none"></svg>
+          </div>
+          <p class="caption">Total daily cost across providers.</p>
+        </div>
+        <div class="panel">
+          <h3>Top Cost Drivers</h3>
+          <div class="provider-group">
+            <h4>Services</h4>
+            <ul id="topServices" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>Accounts</h4>
+            <ul id="topAccounts" class="list"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Tag Coverage by Provider</h3>
+          <div id="tagCoverageByProvider" class="tag-splits"></div>
         </div>
       </section>
 

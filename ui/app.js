@@ -3,6 +3,9 @@ const API_BASE = "http://localhost:8000";
 const todayTotalEl = document.getElementById("todayTotal");
 const weekTotalEl = document.getElementById("weekTotal");
 const monthTotalEl = document.getElementById("monthTotal");
+const todaySplitEl = document.getElementById("todaySplit");
+const weekSplitEl = document.getElementById("weekSplit");
+const monthSplitEl = document.getElementById("monthSplit");
 
 const byProviderEl = document.getElementById("byProvider");
 const byServiceAwsEl = document.getElementById("byServiceAws");
@@ -16,6 +19,10 @@ const pagerButtons = document.querySelectorAll(".pager-btn");
 const anomaliesEl = document.getElementById("anomalies");
 const tagCoverageEl = document.getElementById("tagCoverage");
 const freshnessEl = document.getElementById("freshnessList");
+const sparklineEl = document.getElementById("costSparkline");
+const topServicesEl = document.getElementById("topServices");
+const topAccountsEl = document.getElementById("topAccounts");
+const tagCoverageByProviderEl = document.getElementById("tagCoverageByProvider");
 const barFully = document.getElementById("barFully");
 const barPartial = document.getElementById("barPartial");
 const barUntagged = document.getElementById("barUntagged");
@@ -28,7 +35,13 @@ const SERVICE_PAGE_SIZE = 10;
 let servicePageIndex = 0;
 
 function formatCost(value) {
-  return `$${value.toFixed(2)}`;
+  const formatter = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    notation: value >= 10000 ? "compact" : "standard",
+    maximumFractionDigits: value >= 10000 ? 1 : 2,
+  });
+  return formatter.format(value);
 }
 
 function toISODate(value) {
@@ -141,6 +154,72 @@ function renderUntagged(entries) {
   });
 }
 
+function renderSummarySplit(container, rows) {
+  container.innerHTML = "";
+  if (!rows.length) {
+    container.innerHTML = "<div class=\"summary-chip\"><strong>—</strong><span>No data</span></div>";
+    return;
+  }
+  rows.forEach((row) => {
+    const chip = document.createElement("div");
+    chip.className = "summary-chip";
+    chip.innerHTML = `<strong>${row.key}</strong><span>${formatCost(row.total_cost)}</span>`;
+    container.appendChild(chip);
+  });
+}
+
+function renderSparkline(points) {
+  sparklineEl.innerHTML = "";
+  if (!points.length) {
+    return;
+  }
+  const max = Math.max(...points);
+  const min = Math.min(...points);
+  const range = max - min || 1;
+  const step = 300 / (points.length - 1 || 1);
+  const path = points
+    .map((value, idx) => {
+      const x = idx * step;
+      const y = 80 - ((value - min) / range) * 70 - 5;
+      return `${idx === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(" ");
+  const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  line.setAttribute("d", path);
+  line.setAttribute("fill", "none");
+  line.setAttribute("stroke", "#e35137");
+  line.setAttribute("stroke-width", "2");
+  sparklineEl.appendChild(line);
+}
+
+function renderTagCoverageByProvider(rows) {
+  tagCoverageByProviderEl.innerHTML = "";
+  if (!rows.length) {
+    tagCoverageByProviderEl.innerHTML = "<div class=\"tag-split\">No data</div>";
+    return;
+  }
+  rows.forEach((row) => {
+    const coverage = row.coverage;
+    const total = coverage.total_cost || 0;
+    const fullyPct = total ? (coverage.fully_tagged_cost / total) * 100 : 0;
+    const partialPct = total ? (coverage.partially_tagged_cost / total) * 100 : 0;
+    const untaggedPct = total ? (coverage.untagged_cost / total) * 100 : 0;
+
+    const container = document.createElement("div");
+    container.className = "tag-split";
+    container.innerHTML = `
+      <header>
+        <span>${row.provider}</span>
+        <span>${formatCost(total)}</span>
+      </header>
+      <div class="bar-track"><div class="bar-fill" style="width:${fullyPct.toFixed(1)}%"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${partialPct.toFixed(1)}%; background:#f08a6b"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${untaggedPct.toFixed(1)}%; background:#f4c7b2"></div></div>
+    `;
+    tagCoverageByProviderEl.appendChild(container);
+  });
+}
+
 async function refreshData() {
   const fromDate = fromInput.value;
   const toDate = toInput.value;
@@ -161,7 +240,14 @@ async function refreshData() {
       todayTotal,
       weekTotal,
       monthTotal,
+      todayByProvider,
+      weekByProvider,
+      monthByProvider,
       byProvider,
+      topServices,
+      topAccounts,
+      tagCoverageByProvider,
+      trendRows,
       byServiceAws,
       byServiceAzure,
       byServiceGcp,
@@ -175,7 +261,14 @@ async function refreshData() {
       fetchJson(`/costs/total${todayQuery}`),
       fetchJson(`/costs/total${weekQuery}`),
       fetchJson(`/costs/total${monthQuery}`),
+      fetchJson(`/costs/by-provider${todayQuery}`),
+      fetchJson(`/costs/by-provider${weekQuery}`),
+      fetchJson(`/costs/by-provider${monthQuery}`),
       fetchJson(`/costs/by-provider${rangeQuery}`),
+      fetchJson(`/costs/by-service${rangeQuery}&limit=5&offset=0`),
+      fetchJson(`/costs/by-account${rangeQuery}&limit=5&offset=0`),
+      fetchJson(`/costs/tag-hygiene/by-provider${rangeQuery}`),
+      fetchJson(`/costs/deltas${rangeQuery}`),
       fetchJson(`/costs/by-service${rangeQuery}&provider=aws&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
       fetchJson(`/costs/by-service${rangeQuery}&provider=azure&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
       fetchJson(`/costs/by-service${rangeQuery}&provider=gcp&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
@@ -190,8 +283,25 @@ async function refreshData() {
     todayTotalEl.textContent = formatCost(todayTotal.total_cost);
     weekTotalEl.textContent = formatCost(weekTotal.total_cost);
     monthTotalEl.textContent = formatCost(monthTotal.total_cost);
+    renderSummarySplit(todaySplitEl, todayByProvider);
+    renderSummarySplit(weekSplitEl, weekByProvider);
+    renderSummarySplit(monthSplitEl, monthByProvider);
 
     renderList(byProviderEl, byProvider);
+    renderList(topServicesEl, topServices);
+    renderList(topAccountsEl, topAccounts);
+    renderTagCoverageByProvider(tagCoverageByProvider);
+
+    const trendTotals = {};
+    trendRows.forEach((row) => {
+      const key = row.date;
+      trendTotals[key] = (trendTotals[key] || 0) + (row.total_cost || 0);
+    });
+    const trendPoints = Object.keys(trendTotals)
+      .sort()
+      .map((key) => trendTotals[key]);
+    renderSparkline(trendPoints);
+
     renderList(byServiceAwsEl, byServiceAws);
     renderList(byServiceAzureEl, byServiceAzure);
     renderList(byServiceGcpEl, byServiceGcp);

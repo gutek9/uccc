@@ -15,6 +15,7 @@ from api.schemas import (
     DataFreshnessResponse,
     GroupedCostResponse,
     ProviderBreakdownResponse,
+    TagCoverageByProviderResponse,
     TagCoverageResponse,
     TagHygieneResponse,
     TotalCostResponse,
@@ -299,6 +300,48 @@ def tag_hygiene(
     )
 
     return TagHygieneResponse(coverage=coverage, untagged_entries=untagged_entries)
+
+
+@app.get("/costs/tag-hygiene/by-provider", response_model=List[TagCoverageByProviderResponse])
+def tag_hygiene_by_provider(
+    required: Optional[str] = None,
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    required_tags = [tag.strip() for tag in (required or ",".join(DEFAULT_REQUIRED_TAGS)).split(",") if tag.strip()]
+    entries = crud.get_entries_in_range(session, start, end)
+
+    coverage_by_provider: dict[str, TagCoverageResponse] = {}
+    for entry in entries:
+        provider = entry.provider
+        tags = entry.tags or {}
+        coverage = coverage_by_provider.get(
+            provider,
+            TagCoverageResponse(
+                required_tags=required_tags,
+                total_cost=0.0,
+                fully_tagged_cost=0.0,
+                partially_tagged_cost=0.0,
+                untagged_cost=0.0,
+            ),
+        )
+
+        coverage.total_cost += entry.cost
+        has_all, missing = evaluate_tags(tags, required_tags)
+        if has_all:
+            coverage.fully_tagged_cost += entry.cost
+        elif len(tags) == 0:
+            coverage.untagged_cost += entry.cost
+        else:
+            coverage.partially_tagged_cost += entry.cost
+        coverage_by_provider[provider] = coverage
+
+    return [
+        TagCoverageByProviderResponse(provider=provider, coverage=coverage)
+        for provider, coverage in sorted(coverage_by_provider.items())
+    ]
 
 
 @app.get("/costs/freshness", response_model=List[DataFreshnessResponse])
