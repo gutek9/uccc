@@ -1,0 +1,4054 @@
+[
+  {
+    "date": "2025-10-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 160.51,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 108.76,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.1,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 145.32,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 128.44,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 28.87,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 153.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 131.33,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.87,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 156.47,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 123.83,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.46,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 138.92,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 108.77,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 29.86,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 176.91,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 136.52,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 35.79,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 138.48,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 127.17,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.94,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 141.3,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 117.73,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 32.24,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 135.75,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 126.47,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.9,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 156.42,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 115.08,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.02,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 150.66,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 114.0,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.07,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 150.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 114.32,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 33.77,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 178.07,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 138.16,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 40.99,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 156.2,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 124.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.02,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 145.5,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 115.26,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.25,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 156.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 116.72,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 32.95,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 143.01,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 116.94,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.78,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 141.9,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 118.84,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.42,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 139.76,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 120.32,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.21,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 175.72,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 131.54,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 37.8,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 153.64,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 108.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.68,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 157.94,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 129.57,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.56,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 142.19,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 130.54,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.49,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 153.48,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 110.21,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 28.72,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 136.8,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 121.3,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 33.9,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 140.56,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 114.38,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 33.93,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 167.55,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 156.71,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 40.93,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 150.94,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 117.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.47,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 137.24,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 116.01,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.36,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 157.27,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 116.37,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-10-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.52,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 219.02,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-10-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 124.76,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-10-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.72,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 155.99,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 110.17,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.6,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 136.93,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 110.44,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 32.06,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 161.69,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 150.04,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 38.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 139.34,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.6,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.08,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 144.93,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 121.96,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.21,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 144.09,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 118.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.23,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 148.38,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 130.76,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 145.37,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 116.59,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 162.22,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 118.31,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.43,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 184.85,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 136.44,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 39.9,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 151.39,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 120.78,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.71,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 137.58,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 111.92,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.34,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 137.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 120.01,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.13,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 144.46,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 114.95,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 29.09,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 144.56,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 120.25,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.08,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 136.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 108.55,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.56,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 179.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 145.4,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 39.96,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 153.09,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 125.33,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 140.4,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 121.57,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 142.05,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 122.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.52,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 158.16,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 129.59,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.31,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 139.73,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 117.84,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.99,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 150.59,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 112.41,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.72,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 166.05,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 141.15,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 37.67,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 157.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 114.47,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.19,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 150.44,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 114.31,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.72,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 150.34,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 125.3,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 30.21,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 142.06,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 118.33,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-11-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.67,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 159.54,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 111.91,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.4,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 149.93,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-11-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 115.62,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-11-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.91,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 166.01,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 155.51,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 39.25,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 155.17,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.51,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.25,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 152.89,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 117.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.18,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 159.77,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 125.18,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.62,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 140.75,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 30.46,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 157.41,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 109.1,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 28.48,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 147.28,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 112.77,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.82,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 164.53,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 140.1,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.44,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 146.92,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 108.04,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 32.04,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 134.66,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 131.22,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.33,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 155.73,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 116.65,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 33.15,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 153.13,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 120.47,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.09,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 161.26,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 128.21,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.24,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 144.65,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 113.84,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 31.79,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 301.71,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 135.41,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-15",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 39.59,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 157.28,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.64,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-16",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 32.31,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 163.21,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 117.1,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-17",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 30.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 162.27,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 121.81,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-18",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 28.62,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 149.18,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 117.96,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-19",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.09,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 162.85,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 117.19,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-20",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 136.08,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 110.74,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-21",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 165.45,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 134.24,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-22",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 35.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 155.8,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 115.88,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-23",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.0,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 148.88,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.75,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-24",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 29.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 141.06,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 128.18,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-25",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 31.29,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 139.61,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 121.0,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-26",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.76,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 142.31,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 110.82,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-27",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 29.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 162.26,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 128.35,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-28",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.4,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 174.19,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 150.46,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-29",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 38.43,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 155.78,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 111.55,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2025-12-30",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 29.82,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 162.17,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2025-12-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 127.95,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2025-12-31",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.64,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 148.76,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 124.73,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-01",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 33.91,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 147.78,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 119.89,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-02",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 28.84,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 153.74,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 114.15,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-03",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 32.7,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 147.61,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 111.21,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-04",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.34,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 172.27,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 156.8,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-05",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 37.48,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 138.99,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 113.07,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-06",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 28.94,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 233.54,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 114.13,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-07",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.25,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 137.15,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 110.87,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-08",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.18,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 154.43,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 121.69,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-09",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 28.51,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 158.03,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 110.89,
+    "currency": "EUR",
+    "tags": {}
+  },
+  {
+    "date": "2026-01-10",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 29.41,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 148.88,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 112.07,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-11",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.07,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 162.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 147.86,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-12",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 34.51,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "westeurope",
+    "cost": 146.63,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "westeurope",
+    "cost": 122.83,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-13",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "eastus",
+    "cost": 34.48,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "AKS",
+    "region": "eastus",
+    "cost": 148.4,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform"
+    }
+  },
+  {
+    "date": "2026-01-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "Blob",
+    "region": "eastus",
+    "cost": 129.45,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  },
+  {
+    "date": "2026-01-14",
+    "account_id": "az-3333",
+    "account_name": "edge-services",
+    "service": "CosmosDB",
+    "region": "westeurope",
+    "cost": 30.05,
+    "currency": "EUR",
+    "tags": {
+      "owner": "platform",
+      "cost_center": "cc-1",
+      "environment": "prod"
+    }
+  }
+]
