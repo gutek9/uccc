@@ -15,22 +15,14 @@ const accountPageEl = document.getElementById("accountPage");
 const pagerButtons = document.querySelectorAll(".pager-btn");
 const tabButtons = document.querySelectorAll(".tab-btn");
 const anomaliesEl = document.getElementById("anomalies");
-const tagCoverageEl = document.getElementById("tagCoverage");
 const freshnessEl = document.getElementById("freshnessList");
 const sparklineEl = document.getElementById("costSparkline");
 const topServicesEl = document.getElementById("topServices");
 const topAccountsEl = document.getElementById("topAccounts");
-const tagCoverageByProviderEl = document.getElementById("tagCoverageByProvider");
 const wowDeltaEl = document.getElementById("wowDelta");
 const momDeltaEl = document.getElementById("momDelta");
 const topServiceDeltasEl = document.getElementById("topServiceDeltas");
 const topAccountDeltasEl = document.getElementById("topAccountDeltas");
-const untaggedServicesEl = document.getElementById("untaggedServices");
-const untaggedAccountsEl = document.getElementById("untaggedAccounts");
-const barFully = document.getElementById("barFully");
-const barPartial = document.getElementById("barPartial");
-const barUntagged = document.getElementById("barUntagged");
-const untaggedTable = document.getElementById("untaggedTable");
 
 const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
@@ -125,44 +117,6 @@ function renderAnomalies(rows) {
   });
 }
 
-function renderTagCoverage(coverage) {
-  const total = coverage.total_cost || 0;
-  const fully = coverage.fully_tagged_cost || 0;
-  const partial = coverage.partially_tagged_cost || 0;
-  const untagged = coverage.untagged_cost || 0;
-
-  tagCoverageEl.querySelector(".metric").textContent = formatCost(fully);
-
-  const fullyPct = total ? (fully / total) * 100 : 0;
-  const partialPct = total ? (partial / total) * 100 : 0;
-  const untaggedPct = total ? (untagged / total) * 100 : 0;
-
-  barFully.style.width = `${fullyPct.toFixed(1)}%`;
-  barPartial.style.width = `${partialPct.toFixed(1)}%`;
-  barUntagged.style.width = `${untaggedPct.toFixed(1)}%`;
-}
-
-function renderUntagged(entries) {
-  untaggedTable.innerHTML = "";
-  const rows = entries.slice(0, 12);
-  if (!rows.length) {
-    untaggedTable.innerHTML = `<tr><td colspan="6">No untagged costs</td></tr>`;
-    return;
-  }
-  rows.forEach((entry) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${entry.date}</td>
-      <td>${entry.provider}</td>
-      <td>${entry.account_id}</td>
-      <td>${entry.service}</td>
-      <td>${formatCost(entry.cost)}</td>
-      <td>${entry.missing_tags.join(", ") || "—"}</td>
-    `;
-    untaggedTable.appendChild(tr);
-  });
-}
-
 function renderSummarySplit(container, rows, highlightKey = null) {
   container.innerHTML = "";
   if (!rows.length) {
@@ -192,14 +146,16 @@ function renderSparkline(points) {
   if (!points.length) {
     return;
   }
+  const width = 300;
+  const height = 120;
   const max = Math.max(...points);
   const min = Math.min(...points);
   const range = max - min || 1;
-  const step = 300 / (points.length - 1 || 1);
+  const step = width / (points.length - 1 || 1);
   const path = points
     .map((value, idx) => {
       const x = idx * step;
-      const y = 80 - ((value - min) / range) * 70 - 5;
+      const y = height - ((value - min) / range) * (height - 10) - 5;
       return `${idx === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`;
     })
     .join(" ");
@@ -209,35 +165,6 @@ function renderSparkline(points) {
   line.setAttribute("stroke", "#e35137");
   line.setAttribute("stroke-width", "2");
   sparklineEl.appendChild(line);
-}
-
-function renderTagCoverageByProvider(rows, currencyMap) {
-  tagCoverageByProviderEl.innerHTML = "";
-  if (!rows.length) {
-    tagCoverageByProviderEl.innerHTML = "<div class=\"tag-split\">No data</div>";
-    return;
-  }
-  rows.forEach((row) => {
-    const coverage = row.coverage;
-    const total = coverage.total_cost || 0;
-    const currency = currencyMap[row.provider] || "USD";
-    const fullyPct = total ? (coverage.fully_tagged_cost / total) * 100 : 0;
-    const partialPct = total ? (coverage.partially_tagged_cost / total) * 100 : 0;
-    const untaggedPct = total ? (coverage.untagged_cost / total) * 100 : 0;
-
-    const container = document.createElement("div");
-    container.className = "tag-split";
-    container.innerHTML = `
-      <header>
-        <span>${row.provider}</span>
-        <span>${formatCost(total, currency)}</span>
-      </header>
-      <div class="bar-track"><div class="bar-fill" style="width:${fullyPct.toFixed(1)}%"></div></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${partialPct.toFixed(1)}%; background:#f08a6b"></div></div>
-      <div class="bar-track"><div class="bar-fill" style="width:${untaggedPct.toFixed(1)}%; background:#f4c7b2"></div></div>
-    `;
-    tagCoverageByProviderEl.appendChild(container);
-  });
 }
 
 function renderDeltaList(container, rows, currency = "USD") {
@@ -307,16 +234,12 @@ async function refreshData() {
       providerTotalsRange,
       topServices,
       topAccounts,
-      tagCoverageByProvider,
       trendRows,
       breakdowns,
       prevWeekByProvider,
       prevMonthByProvider,
       serviceDeltas,
       accountDeltas,
-      untaggedServices,
-      untaggedAccounts,
-      tagHygiene,
       anomalies,
       freshness,
     ] = await Promise.all([
@@ -329,7 +252,6 @@ async function refreshData() {
       fetchJson(`/costs/provider-totals${rangeQuery}`),
       fetchJson(`/costs/by-service${rangeQuery}&limit=5&offset=0`),
       fetchJson(`/costs/by-account${rangeQuery}&limit=5&offset=0`),
-      fetchJson(`/costs/tag-hygiene/by-provider${rangeQuery}`),
       fetchJson(`/costs/deltas${rangeQuery}`),
       fetchJson(
         `/costs/breakdowns${buildRangeQuery(
@@ -357,19 +279,6 @@ async function refreshData() {
           new Date(Date.now() - 7 * 86400000)
         )}&provider=${activeProvider}&limit=5`
       ),
-      fetchJson(
-        `/costs/tag-hygiene/untagged${buildRangeQuery(
-          rangeQuery,
-          `group=service&provider=${activeProvider}`
-        )}`
-      ),
-      fetchJson(
-        `/costs/tag-hygiene/untagged${buildRangeQuery(
-          rangeQuery,
-          `group=account&provider=${activeProvider}`
-        )}`
-      ),
-      fetchJson(`/costs/tag-hygiene${rangeQuery}`),
       fetchJson(`/costs/anomalies${rangeQuery}`),
       fetchJson(`/costs/freshness`),
     ]);
@@ -388,7 +297,6 @@ async function refreshData() {
       acc[row.provider] = row.currency || "USD";
       return acc;
     }, {});
-    renderTagCoverageByProvider(tagCoverageByProvider, currencyMap);
 
     const trendTotals = {};
     trendRows.forEach((row) => {
@@ -413,10 +321,6 @@ async function refreshData() {
     momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
     renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency);
     renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency);
-    renderList(untaggedServicesEl, untaggedServices);
-    renderList(untaggedAccountsEl, untaggedAccounts);
-    renderTagCoverage(tagHygiene.coverage);
-    renderUntagged(tagHygiene.untagged_entries);
     renderAnomalies(anomalies);
     renderFreshness(freshness);
     servicePageEl.textContent = `Page ${servicePageIndex + 1}`;

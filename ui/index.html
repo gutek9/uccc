@@ -66,7 +66,7 @@
         <div class="panel">
           <h3>Cost Trend (30 days)</h3>
           <div class="sparkline-wrap">
-            <svg id="costSparkline" viewBox="0 0 300 80" preserveAspectRatio="none"></svg>
+            <svg id="costSparkline" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
           </div>
           <p class="caption">Total daily cost across providers.</p>
         </div>
@@ -82,10 +82,6 @@
           </div>
         </div>
         <div class="panel">
-          <h3>Tag Coverage by Provider</h3>
-          <div id="tagCoverageByProvider" class="tag-splits"></div>
-        </div>
-        <div class="panel">
           <h3>Momentum</h3>
           <div class="metric-row">
             <span>Week over week</span>
@@ -96,18 +92,6 @@
             <strong id="momDelta">—</strong>
           </div>
           <p class="caption">Compares total spend against the previous period.</p>
-        </div>
-        <div class="panel">
-          <h3>Untagged Hotspots</h3>
-          <div class="provider-group">
-            <h4>Services</h4>
-            <ul id="untaggedServices" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Accounts</h4>
-            <ul id="untaggedAccounts" class="list"></ul>
-          </div>
-          <p class="caption">Missing required tags for the selected provider.</p>
         </div>
         <div class="panel">
           <h3>Top Movers (WoW)</h3>
@@ -160,49 +144,9 @@
         </div>
       </section>
 
-      <section class="grid">
-        <div class="panel">
-          <h3>Tag Coverage</h3>
-          <div id="tagCoverage" class="tag-coverage">
-            <p class="metric">—</p>
-            <p class="caption">Fully tagged cost</p>
-          </div>
-          <div class="tag-bars">
-            <div class="bar">
-              <span>Fully tagged</span>
-              <div class="bar-track"><div class="bar-fill" id="barFully"></div></div>
-            </div>
-            <div class="bar">
-              <span>Partially tagged</span>
-              <div class="bar-track"><div class="bar-fill" id="barPartial"></div></div>
-            </div>
-            <div class="bar">
-              <span>Untagged</span>
-              <div class="bar-track"><div class="bar-fill" id="barUntagged"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>Anomalies</h3>
-          <ul id="anomalies" class="list"></ul>
-        </div>
-      </section>
-
       <section class="panel">
-        <h3>Untagged Costs</h3>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Provider</th>
-              <th>Account</th>
-              <th>Service</th>
-              <th>Cost</th>
-              <th>Missing Tags</th>
-            </tr>
-          </thead>
-          <tbody id="untaggedTable"></tbody>
-        </table>
+        <h3>Anomalies</h3>
+        <ul id="anomalies" class="list"></ul>
       </section>
     </main>
 
