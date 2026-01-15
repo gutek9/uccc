@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import boto3
+from botocore.config import Config
 
-from collectors.common import load_sample_data
+from collectors.common import load_sample_data, resolve_date_range
 
 SAMPLE_PATH = Path(__file__).with_name("sample.json")
 
@@ -27,7 +28,8 @@ def _build_session() -> boto3.Session:
 
     role_arn = _get_env("AWS_ROLE_ARN")
     if role_arn:
-        sts = session.client("sts", region_name=region)
+        retry_config = Config(retries={"max_attempts": 5, "mode": "standard"})
+        sts = session.client("sts", region_name=region, config=retry_config)
         assume_args = {"RoleArn": role_arn, "RoleSessionName": "uccc-cost-explorer"}
         external_id = _get_env("AWS_EXTERNAL_ID")
         if external_id:
@@ -47,12 +49,12 @@ def _collect_from_api() -> List[Dict[str, Any]]:
     lookback_days = int(_get_env("LOOKBACK_DAYS", "7"))
     metric = _get_env("AWS_COST_METRIC", "UnblendedCost")
 
-    end_date = date.today()
-    start_date = end_date - timedelta(days=lookback_days)
+    start_date, end_date = resolve_date_range(lookback_days)
     end_exclusive = end_date + timedelta(days=1)
 
     session = _build_session()
-    client = session.client("ce", region_name=region)
+    retry_config = Config(retries={"max_attempts": 5, "mode": "standard"})
+    client = session.client("ce", region_name=region, config=retry_config)
 
     entries: List[Dict[str, Any]] = []
     token = None

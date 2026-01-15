@@ -10,9 +10,15 @@ def run_collectors():
     session = SessionLocal()
     try:
         entries = []
-        entries.extend(collect_aws())
-        entries.extend(collect_gcp())
-        entries.extend(collect_azure())
+        for name, collector in (
+            ("aws", collect_aws),
+            ("gcp", collect_gcp),
+            ("azure", collect_azure),
+        ):
+            try:
+                entries.extend(collector())
+            except Exception as exc:
+                print(f"[collector:{name}] failed: {exc}")
         normalized = normalize_entries(entries)
         upsert_cost_entries(session, normalized)
     finally:

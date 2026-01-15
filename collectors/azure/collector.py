@@ -4,8 +4,10 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
-from collectors.common import load_sample_data
+from collectors.common import load_sample_data, resolve_date_range
 
 SAMPLE_PATH = Path(__file__).with_name("sample.json")
 
@@ -15,7 +17,15 @@ def _get_env(name: str, default: Optional[str] = None) -> Optional[str]:
     return value.strip() if value else value
 
 
-def _get_token(tenant_id: str, client_id: str, client_secret: str) -> str:
+def _build_http_session() -> requests.Session:
+    session = requests.Session()
+    retry = Retry(total=3, backoff_factor=0.6, status_forcelist=[429, 500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    return session
+
+
+def _get_token(session: requests.Session, tenant_id: str, client_id: str, client_secret: str) -> str:
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/token"
     data = {
         "grant_type": "client_credentials",
@@ -23,13 +33,13 @@ def _get_token(tenant_id: str, client_id: str, client_secret: str) -> str:
         "client_secret": client_secret,
         "resource": "https://management.azure.com/",
     }
-    response = requests.post(url, data=data, timeout=20)
+    response = session.post(url, data=data, timeout=20)
     response.raise_for_status()
     payload = response.json()
     return payload["access_token"]
 
 
-def _iter_rows(payload: Dict[str, Any]) -> Iterable[tuple[list[str], List[Any]]]:
+def _iter_rows(session: requests.Session, payload: Dict[str, Any]) -> Iterable[tuple[list[str], List[Any]]]:
     properties = payload.get("properties", {})
     columns = [col["name"] for col in properties.get("columns", [])]
     rows = properties.get("rows", [])
@@ -37,7 +47,7 @@ def _iter_rows(payload: Dict[str, Any]) -> Iterable[tuple[list[str], List[Any]]]
         yield columns, row
     next_link = properties.get("nextLink")
     while next_link:
-        response = requests.post(next_link, timeout=20)
+        response = session.post(next_link, timeout=20)
         response.raise_for_status()
         payload = response.json()
         properties = payload.get("properties", {})
@@ -111,10 +121,10 @@ def _collect_from_api() -> List[Dict[str, Any]]:
 
     account_name = _get_env("AZURE_ACCOUNT_NAME")
     lookback_days = int(_get_env("LOOKBACK_DAYS", "7"))
-    end_date = date.today()
-    start_date = end_date - timedelta(days=lookback_days)
+    start_date, end_date = resolve_date_range(lookback_days)
 
-    token = _get_token(tenant_id, client_id, client_secret)
+    session = _build_http_session()
+    token = _get_token(session, tenant_id, client_id, client_secret)
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
     all_entries: List[Dict[str, Any]] = []
@@ -124,10 +134,10 @@ def _collect_from_api() -> List[Dict[str, Any]]:
             "/providers/Microsoft.CostManagement/query?api-version=2023-03-01"
         )
         body = _build_query(start_date, end_date)
-        response = requests.post(url, headers=headers, json=body, timeout=30)
+        response = session.post(url, headers=headers, json=body, timeout=30)
         response.raise_for_status()
         payload = response.json()
-        rows = _iter_rows(payload)
+        rows = _iter_rows(session, payload)
         all_entries.extend(_parse_rows(rows, subscription_id, account_name))
     return all_entries
 
