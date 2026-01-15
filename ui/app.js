@@ -25,6 +25,8 @@ const wowDeltaEl = document.getElementById("wowDelta");
 const momDeltaEl = document.getElementById("momDelta");
 const topServiceDeltasEl = document.getElementById("topServiceDeltas");
 const topAccountDeltasEl = document.getElementById("topAccountDeltas");
+const untaggedServicesEl = document.getElementById("untaggedServices");
+const untaggedAccountsEl = document.getElementById("untaggedAccounts");
 const barFully = document.getElementById("barFully");
 const barPartial = document.getElementById("barPartial");
 const barUntagged = document.getElementById("barUntagged");
@@ -312,6 +314,8 @@ async function refreshData() {
       prevMonthByProvider,
       serviceDeltas,
       accountDeltas,
+      untaggedServices,
+      untaggedAccounts,
       tagHygiene,
       anomalies,
       freshness,
@@ -352,6 +356,18 @@ async function refreshData() {
         )}&compare_from=${toISODate(new Date(Date.now() - 13 * 86400000))}&compare_to=${toISODate(
           new Date(Date.now() - 7 * 86400000)
         )}&provider=${activeProvider}&limit=5`
+      ),
+      fetchJson(
+        `/costs/tag-hygiene/untagged${buildRangeQuery(
+          rangeQuery,
+          `group=service&provider=${activeProvider}`
+        )}`
+      ),
+      fetchJson(
+        `/costs/tag-hygiene/untagged${buildRangeQuery(
+          rangeQuery,
+          `group=account&provider=${activeProvider}`
+        )}`
       ),
       fetchJson(`/costs/tag-hygiene${rangeQuery}`),
       fetchJson(`/costs/anomalies${rangeQuery}`),
@@ -397,6 +413,8 @@ async function refreshData() {
     momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
     renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency);
     renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency);
+    renderList(untaggedServicesEl, untaggedServices);
+    renderList(untaggedAccountsEl, untaggedAccounts);
     renderTagCoverage(tagHygiene.coverage);
     renderUntagged(tagHygiene.untagged_entries);
     renderAnomalies(anomalies);

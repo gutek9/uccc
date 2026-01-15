@@ -341,11 +341,14 @@ def tag_hygiene(
     required: Optional[str] = None,
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
+    provider: Optional[str] = None,
     session: Session = Depends(get_session),
 ):
     start, end = parse_date_range(from_date, to_date)
-    required_tags = [tag.strip() for tag in (required or ",".join(DEFAULT_REQUIRED_TAGS)).split(",") if tag.strip()]
+    required_tags = _required_tags_for_provider(provider, required)
     entries = crud.get_entries_in_range(session, start, end)
+    if provider:
+        entries = [entry for entry in entries if entry.provider == provider]
 
     total_cost = 0.0
     fully_tagged = 0.0
@@ -397,13 +400,13 @@ def tag_hygiene_by_provider(
     session: Session = Depends(get_session),
 ):
     start, end = parse_date_range(from_date, to_date)
-    required_tags = [tag.strip() for tag in (required or ",".join(DEFAULT_REQUIRED_TAGS)).split(",") if tag.strip()]
     entries = crud.get_entries_in_range(session, start, end)
 
     coverage_by_provider: dict[str, TagCoverageResponse] = {}
     for entry in entries:
         provider = entry.provider
         tags = entry.tags or {}
+        required_tags = _required_tags_for_provider(provider, required)
         coverage = coverage_by_provider.get(
             provider,
             TagCoverageResponse(
@@ -431,6 +434,35 @@ def tag_hygiene_by_provider(
     ]
 
 
+@app.get("/costs/tag-hygiene/untagged", response_model=List[GroupedCostResponse])
+def untagged_breakdown(
+    group: str = "service",
+    required: Optional[str] = None,
+    provider: Optional[str] = None,
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    required_tags = _required_tags_for_provider(provider, required)
+    entries = crud.get_entries_in_range(session, start, end)
+    if provider:
+        entries = [entry for entry in entries if entry.provider == provider]
+
+    totals: dict[str, float] = {}
+    for entry in entries:
+        tags = entry.tags or {}
+        has_all, missing = evaluate_tags(tags, required_tags)
+        if has_all:
+            continue
+        key = entry.service if group == "service" else entry.account_id
+        totals[key] = totals.get(key, 0.0) + entry.cost
+
+    rows = [GroupedCostResponse(key=key, total_cost=total) for key, total in totals.items()]
+    rows.sort(key=lambda item: item.total_cost, reverse=True)
+    return rows
+
+
 @app.get("/costs/freshness", response_model=List[DataFreshnessResponse])
 def freshness(session: Session = Depends(get_session)):
     rows = crud.get_freshness(session)
@@ -446,3 +478,13 @@ def freshness(session: Session = Depends(get_session)):
             )
         )
     return response
+
+
+def _required_tags_for_provider(provider: Optional[str], required: Optional[str]) -> list[str]:
+    if required:
+        return [tag.strip() for tag in required.split(",") if tag.strip()]
+    if provider:
+        override = os.getenv(f"REQUIRED_TAGS_{provider.upper()}")
+        if override:
+            return [tag.strip() for tag in override.split(",") if tag.strip()]
+    return DEFAULT_REQUIRED_TAGS
