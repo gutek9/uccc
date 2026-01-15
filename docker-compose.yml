@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: uccc
+      POSTGRES_PASSWORD: uccc
+      POSTGRES_DB: uccc
+    ports:
+      - "5432:5432"
+    volumes:
+      - uccc_db:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      DATABASE_URL: postgresql+psycopg2://uccc:uccc@db:5432/uccc
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID:-}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID:-}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET:-}
+      AZURE_SUBSCRIPTION_IDS: ${AZURE_SUBSCRIPTION_IDS:-}
+      AZURE_ACCOUNT_NAME: ${AZURE_ACCOUNT_NAME:-}
+      AZURE_DEFAULT_CURRENCY: ${AZURE_DEFAULT_CURRENCY:-USD}
+      LOOKBACK_DAYS: ${LOOKBACK_DAYS:-7}
+      AWS_ROLE_ARN: ${AWS_ROLE_ARN:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_COST_METRIC: ${AWS_COST_METRIC:-UnblendedCost}
+      AWS_EXTERNAL_ID: ${AWS_EXTERNAL_ID:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
+      AWS_PROFILE: ${AWS_PROFILE:-default}
+      AWS_SDK_LOAD_CONFIG: "1"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    command: ["sh", "-c", "alembic -c /app/alembic.ini upgrade head && uvicorn api.main:app --host 0.0.0.0 --port 8000"]
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      DATABASE_URL: postgresql+psycopg2://uccc:uccc@db:5432/uccc
+      COLLECTOR_INTERVAL_SECONDS: "86400"
+      ANOMALY_THRESHOLD: "0.3"
+      AZURE_TENANT_ID: ${AZURE_TENANT_ID:-}
+      AZURE_CLIENT_ID: ${AZURE_CLIENT_ID:-}
+      AZURE_CLIENT_SECRET: ${AZURE_CLIENT_SECRET:-}
+      AZURE_SUBSCRIPTION_IDS: ${AZURE_SUBSCRIPTION_IDS:-}
+      AZURE_ACCOUNT_NAME: ${AZURE_ACCOUNT_NAME:-}
+      AZURE_DEFAULT_CURRENCY: ${AZURE_DEFAULT_CURRENCY:-USD}
+      LOOKBACK_DAYS: ${LOOKBACK_DAYS:-7}
+      AWS_ROLE_ARN: ${AWS_ROLE_ARN:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_COST_METRIC: ${AWS_COST_METRIC:-UnblendedCost}
+      AWS_EXTERNAL_ID: ${AWS_EXTERNAL_ID:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
+      AWS_PROFILE: ${AWS_PROFILE:-default}
+      AWS_SDK_LOAD_CONFIG: "1"
+      # SLACK_WEBHOOK_URL: https://hooks.slack.com/services/...
+    depends_on:
+      - db
+    volumes:
+      - ~/.aws:/root/.aws:ro
+
+  ui:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./ui:/usr/share/nginx/html:ro
+
+volumes:
+  uccc_db:
