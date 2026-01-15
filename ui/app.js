@@ -157,7 +157,7 @@ function renderUntagged(entries) {
   });
 }
 
-function renderSummarySplit(container, rows) {
+function renderSummarySplit(container, rows, highlightKey = null) {
   container.innerHTML = "";
   if (!rows.length) {
     container.innerHTML = "<div class=\"summary-chip\"><strong>—</strong><span>No data</span></div>";
@@ -169,6 +169,9 @@ function renderSummarySplit(container, rows) {
     const label = row.key ?? row.provider ?? "—";
     const currency = row.currency || "USD";
     chip.innerHTML = `<strong>${label}</strong><span>${formatCost(row.total_cost, currency)}</span>`;
+    if (highlightKey && label === highlightKey) {
+      chip.classList.add("is-active");
+    }
     container.appendChild(chip);
   });
 }
@@ -294,7 +297,7 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider);
     renderSummarySplit(monthSplitEl, monthByProvider);
 
-    renderSummarySplit(providerSummaryEl, providerTotalsRange);
+    renderSummarySplit(providerSummaryEl, providerTotalsRange, activeProvider);
     renderList(topServicesEl, topServices);
     renderList(topAccountsEl, topAccounts);
     const currencyMap = providerTotalsRange.reduce((acc, row) => {
