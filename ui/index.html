@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unified Cloud Cost Center</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="app">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Unified Cloud Cost Center</p>
+          <h1>One pane of glass for cloud spend.</h1>
+          <p class="subtitle">
+            Daily costs across AWS, GCP, and Azure. Fast signals for owners, anomalies, and tag hygiene.
+          </p>
+        </div>
+      </header>
+
+      <section class="summary">
+        <div class="card highlight">
+          <h2>Today</h2>
+          <p class="metric" id="todayTotal">—</p>
+          <span class="caption">Total cost</span>
+        </div>
+        <div class="card">
+          <h2>Last 7 days</h2>
+          <p class="metric" id="weekTotal">—</p>
+          <span class="caption">Rolling spend</span>
+        </div>
+        <div class="card">
+          <h2>This month</h2>
+          <p class="metric" id="monthTotal">—</p>
+          <span class="caption">Month-to-date</span>
+        </div>
+      </section>
+
+      <section class="panel freshness-panel">
+        <div class="freshness-header">
+          <h3>Data Freshness</h3>
+          <p class="caption">Latest cost day and ingestion time per provider.</p>
+        </div>
+        <div id="freshnessList" class="freshness-list"></div>
+      </section>
+
+      <section class="time-controls-panel">
+        <div class="time-controls">
+          <label>
+            From
+            <input type="date" id="fromDate" />
+          </label>
+          <label>
+            To
+            <input type="date" id="toDate" />
+          </label>
+          <button id="refreshBtn">Refresh</button>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h3>By Provider</h3>
+          <ul id="byProvider" class="list"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h3>By Service</h3>
+            <div class="pager">
+              <button class="pager-btn" data-svc="prev">Prev</button>
+              <span id="servicePage">Page 1</span>
+              <button class="pager-btn" data-svc="next">Next</button>
+            </div>
+          </div>
+          <div class="provider-group">
+            <h4>AWS</h4>
+            <ul id="byServiceAws" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>Azure</h4>
+            <ul id="byServiceAzure" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>GCP</h4>
+            <ul id="byServiceGcp" class="list"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>By Account</h3>
+          <div class="provider-group">
+            <h4>AWS</h4>
+            <ul id="byAccountAws" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>Azure</h4>
+            <ul id="byAccountAzure" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>GCP</h4>
+            <ul id="byAccountGcp" class="list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h3>Tag Coverage</h3>
+          <div id="tagCoverage" class="tag-coverage">
+            <p class="metric">—</p>
+            <p class="caption">Fully tagged cost</p>
+          </div>
+          <div class="tag-bars">
+            <div class="bar">
+              <span>Fully tagged</span>
+              <div class="bar-track"><div class="bar-fill" id="barFully"></div></div>
+            </div>
+            <div class="bar">
+              <span>Partially tagged</span>
+              <div class="bar-track"><div class="bar-fill" id="barPartial"></div></div>
+            </div>
+            <div class="bar">
+              <span>Untagged</span>
+              <div class="bar-track"><div class="bar-fill" id="barUntagged"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Anomalies</h3>
+          <ul id="anomalies" class="list"></ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Untagged Costs</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Provider</th>
+              <th>Account</th>
+              <th>Service</th>
+              <th>Cost</th>
+              <th>Missing Tags</th>
+            </tr>
+          </thead>
+          <tbody id="untaggedTable"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
