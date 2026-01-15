@@ -262,6 +262,50 @@ body {
   margin-bottom: 12px;
 }
 
+.panel-header.small h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #f1e7e1;
+}
+
+.breakdowns-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.breakdown-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.tab-group {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  border: 1px solid #2e2727;
+  background: #171313;
+}
+
+.tab-btn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tab-btn.is-active {
+  background: var(--accent);
+  color: #fff7f2;
+  box-shadow: 0 10px 20px rgba(227, 81, 55, 0.3);
+}
+
 .sparkline-wrap {
   background: #171313;
   border: 1px solid #2e2727;

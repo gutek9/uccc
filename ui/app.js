@@ -7,15 +7,13 @@ const todaySplitEl = document.getElementById("todaySplit");
 const weekSplitEl = document.getElementById("weekSplit");
 const monthSplitEl = document.getElementById("monthSplit");
 
-const byProviderEl = document.getElementById("byProvider");
-const byServiceAwsEl = document.getElementById("byServiceAws");
-const byServiceAzureEl = document.getElementById("byServiceAzure");
-const byServiceGcpEl = document.getElementById("byServiceGcp");
-const byAccountAwsEl = document.getElementById("byAccountAws");
-const byAccountAzureEl = document.getElementById("byAccountAzure");
-const byAccountGcpEl = document.getElementById("byAccountGcp");
+const providerSummaryEl = document.getElementById("providerSummary");
+const breakdownServicesEl = document.getElementById("breakdownServices");
+const breakdownAccountsEl = document.getElementById("breakdownAccounts");
 const servicePageEl = document.getElementById("servicePage");
+const accountPageEl = document.getElementById("accountPage");
 const pagerButtons = document.querySelectorAll(".pager-btn");
+const tabButtons = document.querySelectorAll(".tab-btn");
 const anomaliesEl = document.getElementById("anomalies");
 const tagCoverageEl = document.getElementById("tagCoverage");
 const freshnessEl = document.getElementById("freshnessList");
@@ -32,7 +30,10 @@ const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
 const refreshBtn = document.getElementById("refreshBtn");
 const SERVICE_PAGE_SIZE = 10;
+const ACCOUNT_PAGE_SIZE = 10;
 let servicePageIndex = 0;
+let accountPageIndex = 0;
+let activeProvider = "aws";
 
 function formatCost(value) {
   const formatter = new Intl.NumberFormat(undefined, {
@@ -168,6 +169,11 @@ function renderSummarySplit(container, rows) {
   });
 }
 
+function buildRangeQuery(baseQuery, params) {
+  const joiner = baseQuery ? "&" : "?";
+  return `${baseQuery}${joiner}${params}`;
+}
+
 function renderSparkline(points) {
   sparklineEl.innerHTML = "";
   if (!points.length) {
@@ -235,7 +241,8 @@ async function refreshData() {
   const monthQuery = `?from=${toISODate(monthStart)}&to=${today}`;
 
   try {
-    const offset = servicePageIndex * SERVICE_PAGE_SIZE;
+    const serviceOffset = servicePageIndex * SERVICE_PAGE_SIZE;
+    const accountOffset = accountPageIndex * ACCOUNT_PAGE_SIZE;
     const [
       todayTotal,
       weekTotal,
@@ -248,12 +255,7 @@ async function refreshData() {
       topAccounts,
       tagCoverageByProvider,
       trendRows,
-      byServiceAws,
-      byServiceAzure,
-      byServiceGcp,
-      byAccountAws,
-      byAccountAzure,
-      byAccountGcp,
+      breakdowns,
       tagHygiene,
       anomalies,
       freshness,
@@ -269,12 +271,12 @@ async function refreshData() {
       fetchJson(`/costs/by-account${rangeQuery}&limit=5&offset=0`),
       fetchJson(`/costs/tag-hygiene/by-provider${rangeQuery}`),
       fetchJson(`/costs/deltas${rangeQuery}`),
-      fetchJson(`/costs/by-service${rangeQuery}&provider=aws&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
-      fetchJson(`/costs/by-service${rangeQuery}&provider=azure&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
-      fetchJson(`/costs/by-service${rangeQuery}&provider=gcp&limit=${SERVICE_PAGE_SIZE}&offset=${offset}`),
-      fetchJson(`/costs/by-account${rangeQuery}&provider=aws`),
-      fetchJson(`/costs/by-account${rangeQuery}&provider=azure`),
-      fetchJson(`/costs/by-account${rangeQuery}&provider=gcp`),
+      fetchJson(
+        `/costs/breakdowns${buildRangeQuery(
+          rangeQuery,
+          `provider=${activeProvider}&limit=${SERVICE_PAGE_SIZE}&offset=${serviceOffset}&account_offset=${accountOffset}`
+        )}`
+      ),
       fetchJson(`/costs/tag-hygiene${rangeQuery}`),
       fetchJson(`/costs/anomalies${rangeQuery}`),
       fetchJson(`/costs/freshness`),
@@ -287,7 +289,7 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider);
     renderSummarySplit(monthSplitEl, monthByProvider);
 
-    renderList(byProviderEl, byProvider);
+    renderSummarySplit(providerSummaryEl, byProvider);
     renderList(topServicesEl, topServices);
     renderList(topAccountsEl, topAccounts);
     renderTagCoverageByProvider(tagCoverageByProvider);
@@ -302,17 +304,15 @@ async function refreshData() {
       .map((key) => trendTotals[key]);
     renderSparkline(trendPoints);
 
-    renderList(byServiceAwsEl, byServiceAws);
-    renderList(byServiceAzureEl, byServiceAzure);
-    renderList(byServiceGcpEl, byServiceGcp);
-    renderList(byAccountAwsEl, byAccountAws);
-    renderList(byAccountAzureEl, byAccountAzure);
-    renderList(byAccountGcpEl, byAccountGcp);
+    const breakdown = breakdowns[0];
+    renderList(breakdownServicesEl, breakdown ? breakdown.services : []);
+    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : []);
     renderTagCoverage(tagHygiene.coverage);
     renderUntagged(tagHygiene.untagged_entries);
     renderAnomalies(anomalies);
     renderFreshness(freshness);
     servicePageEl.textContent = `Page ${servicePageIndex + 1}`;
+    accountPageEl.textContent = `Page ${accountPageIndex + 1}`;
   } catch (error) {
     console.error(error);
   }
@@ -331,9 +331,25 @@ pagerButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.dataset.svc === "prev") {
       servicePageIndex = Math.max(0, servicePageIndex - 1);
-    } else {
+    } else if (btn.dataset.svc === "next") {
       servicePageIndex += 1;
     }
+    if (btn.dataset.acct === "prev") {
+      accountPageIndex = Math.max(0, accountPageIndex - 1);
+    } else if (btn.dataset.acct === "next") {
+      accountPageIndex += 1;
+    }
+    refreshData();
+  });
+});
+
+tabButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    tabButtons.forEach((button) => button.classList.remove("is-active"));
+    btn.classList.add("is-active");
+    activeProvider = btn.dataset.provider;
+    servicePageIndex = 0;
+    accountPageIndex = 0;
     refreshData();
   });
 });

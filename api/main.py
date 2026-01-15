@@ -212,6 +212,7 @@ def breakdowns(
     provider: Optional[str] = None,
     limit: int = 10,
     offset: int = 0,
+    account_offset: int = 0,
     session: Session = Depends(get_session),
 ):
     start, end = parse_date_range(from_date, to_date)
@@ -236,7 +237,7 @@ def breakdowns(
             CostEntry.account_id,
             provider=item,
             limit=limit,
-            offset=offset,
+            offset=account_offset,
         )
         response.append(
             ProviderBreakdownResponse(

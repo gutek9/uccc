@@ -87,46 +87,40 @@
         </div>
       </section>
 
-      <section class="grid">
-        <div class="panel">
-          <h3>By Provider</h3>
-          <ul id="byProvider" class="list"></ul>
+      <section class="panel breakdowns-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Breakdowns</h3>
+            <p class="caption">Services and accounts, filtered by provider.</p>
+          </div>
+          <div class="tab-group">
+            <button class="tab-btn is-active" data-provider="aws">AWS</button>
+            <button class="tab-btn" data-provider="azure">Azure</button>
+          </div>
         </div>
-        <div class="panel">
-          <div class="panel-header">
-            <h3>By Service</h3>
-            <div class="pager">
-              <button class="pager-btn" data-svc="prev">Prev</button>
-              <span id="servicePage">Page 1</span>
-              <button class="pager-btn" data-svc="next">Next</button>
+        <div id="providerSummary" class="summary-split"></div>
+        <div class="breakdown-columns">
+          <div>
+            <div class="panel-header small">
+              <h4>Top Services</h4>
+              <div class="pager">
+                <button class="pager-btn" data-svc="prev">Prev</button>
+                <span id="servicePage">Page 1</span>
+                <button class="pager-btn" data-svc="next">Next</button>
+              </div>
             </div>
+            <ul id="breakdownServices" class="list"></ul>
           </div>
-          <div class="provider-group">
-            <h4>AWS</h4>
-            <ul id="byServiceAws" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Azure</h4>
-            <ul id="byServiceAzure" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>GCP</h4>
-            <ul id="byServiceGcp" class="list"></ul>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>By Account</h3>
-          <div class="provider-group">
-            <h4>AWS</h4>
-            <ul id="byAccountAws" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Azure</h4>
-            <ul id="byAccountAzure" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>GCP</h4>
-            <ul id="byAccountGcp" class="list"></ul>
+          <div>
+            <div class="panel-header small">
+              <h4>Top Accounts</h4>
+              <div class="pager">
+                <button class="pager-btn" data-acct="prev">Prev</button>
+                <span id="accountPage">Page 1</span>
+                <button class="pager-btn" data-acct="next">Next</button>
+              </div>
+            </div>
+            <ul id="breakdownAccounts" class="list"></ul>
           </div>
         </div>
       </section>
