@@ -1,9 +1,12 @@
 from datetime import date, datetime, timedelta
+import csv
+import io
 import os
 from typing import List, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -34,6 +37,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+API_KEY = os.getenv("API_KEY")
+
+
+@app.middleware("http")
+async def api_key_guard(request: Request, call_next):
+    if not API_KEY or request.url.path == "/health":
+        return await call_next(request)
+    if request.headers.get("x-api-key") != API_KEY:
+        return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+    return await call_next(request)
 
 
 def get_session():
@@ -106,6 +120,56 @@ def provider_totals(
         )
         seen.add(provider)
     return totals
+
+
+@app.get("/export/costs")
+def export_costs(
+    group: str = "provider",
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    provider: Optional[str] = None,
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    group_map = {
+        "provider": CostEntry.provider,
+        "service": CostEntry.service,
+        "account": CostEntry.account_id,
+    }
+    group_by = group_map.get(group, CostEntry.provider)
+    rows = crud.get_grouped_cost(session, start, end, group_by, provider=provider)
+
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow([group, "total_cost"])
+    for key, total in rows:
+        writer.writerow([key, f"{total:.2f}"])
+    buffer.seek(0)
+    return StreamingResponse(buffer, media_type="text/csv")
+
+
+@app.get("/costs/snapshot")
+def snapshot(
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    session: Session = Depends(get_session),
+):
+    start, end = parse_date_range(from_date, to_date)
+    total = crud.get_total_cost(session, start, end)
+    provider_totals = [
+        ProviderTotalResponse(provider=row[0], total_cost=row[2], currency=row[1] or "USD")
+        for row in crud.get_provider_totals_with_currency(session, start, end)
+    ]
+    tag_coverage = tag_hygiene_by_provider(from_date=from_date, to_date=to_date, session=session)
+    freshness_rows = freshness(session=session)
+    return {
+        "from": start.isoformat(),
+        "to": end.isoformat(),
+        "total": total,
+        "provider_totals": provider_totals,
+        "tag_coverage": tag_coverage,
+        "freshness": freshness_rows,
+    }
 
 
 @app.get("/costs/by-service", response_model=List[GroupedCostResponse])

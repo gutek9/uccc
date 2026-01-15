@@ -47,9 +47,12 @@ Create a `.env` file (ignored by git) with your credentials and settings.
 
 ```
 LOOKBACK_DAYS=90
+API_KEY=optional-shared-secret
 ```
 
 `LOOKBACK_DAYS` applies to all collectors (AWS/Azure).
+
+If `API_KEY` is set, all API requests (except `/health`) require `X-API-Key`.
 
 ### Azure (Cost Management API)
 
@@ -117,10 +120,15 @@ COLLECTOR_INTERVAL_SECONDS=86400
 - `GET /costs/by-account?provider=azure`
 - `GET /costs/by-tag?tag=owner`
 - `GET /costs/deltas`
+- `GET /costs/deltas/by-service`
+- `GET /costs/deltas/by-account`
 - `GET /costs/anomalies`
 - `GET /costs/tag-hygiene`
 - `GET /costs/tag-hygiene/by-provider`
+- `GET /costs/tag-hygiene/untagged?group=service|account`
 - `GET /costs/freshness`
+- `GET /costs/snapshot`
+- `GET /export/costs?group=provider|service|account`
 
 ## Database
 

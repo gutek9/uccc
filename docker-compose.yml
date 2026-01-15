@@ -38,6 +38,7 @@ services:
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:-}
       AWS_PROFILE: ${AWS_PROFILE:-default}
       AWS_SDK_LOAD_CONFIG: "1"
+      API_KEY: ${API_KEY:-}
     ports:
       - "8000:8000"
     depends_on:
