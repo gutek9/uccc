@@ -27,6 +27,7 @@ const topAccountDeltasEl = document.getElementById("topAccountDeltas");
 const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
 const refreshBtn = document.getElementById("refreshBtn");
+const searchInput = document.getElementById("searchInput");
 const SERVICE_PAGE_SIZE = 10;
 const ACCOUNT_PAGE_SIZE = 10;
 let servicePageIndex = 0;
@@ -55,13 +56,20 @@ async function fetchJson(path) {
   return response.json();
 }
 
-function renderList(container, rows) {
+function renderList(container, rows, filterTerm = "") {
   container.innerHTML = "";
   if (!rows.length) {
     container.innerHTML = "<li>No data</li>";
     return;
   }
-  rows.forEach((row) => {
+  const filtered = filterTerm
+    ? rows.filter((row) => (row.key || row.provider || "").toLowerCase().includes(filterTerm))
+    : rows;
+  if (!filtered.length) {
+    container.innerHTML = "<li>No matches</li>";
+    return;
+  }
+  filtered.forEach((row) => {
     const li = document.createElement("li");
     const label = row.key ?? row.provider ?? "—";
     const currency = row.currency || "USD";
@@ -167,13 +175,20 @@ function renderSparkline(points) {
   sparklineEl.appendChild(line);
 }
 
-function renderDeltaList(container, rows, currency = "USD") {
+function renderDeltaList(container, rows, currency = "USD", filterTerm = "") {
   container.innerHTML = "";
   if (!rows.length) {
     container.innerHTML = "<li>No data</li>";
     return;
   }
-  rows.forEach((row) => {
+  const filtered = filterTerm
+    ? rows.filter((row) => (row.key || "").toLowerCase().includes(filterTerm))
+    : rows;
+  if (!filtered.length) {
+    container.innerHTML = "<li>No matches</li>";
+    return;
+  }
+  filtered.forEach((row) => {
     const li = document.createElement("li");
     const pct = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
     const sign = row.delta >= 0 ? "+" : "";
@@ -290,9 +305,10 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider);
     renderSummarySplit(monthSplitEl, monthByProvider);
 
+    const searchTerm = searchInput.value.trim().toLowerCase();
     renderSummarySplit(providerSummaryEl, providerTotalsRange, activeProvider);
-    renderList(topServicesEl, topServices);
-    renderList(topAccountsEl, topAccounts);
+    renderList(topServicesEl, topServices, searchTerm);
+    renderList(topAccountsEl, topAccounts, searchTerm);
     const currencyMap = providerTotalsRange.reduce((acc, row) => {
       acc[row.provider] = row.currency || "USD";
       return acc;
@@ -309,8 +325,8 @@ async function refreshData() {
     renderSparkline(trendPoints);
 
     const breakdown = breakdowns[0];
-    renderList(breakdownServicesEl, breakdown ? breakdown.services : []);
-    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : []);
+    renderList(breakdownServicesEl, breakdown ? breakdown.services : [], searchTerm);
+    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : [], searchTerm);
     updatePagerButtons(breakdown);
     const activeCurrency = currencyMap[activeProvider] || "USD";
     const activeWeekTotal = getProviderTotal(weekByProvider, activeProvider);
@@ -319,8 +335,8 @@ async function refreshData() {
     const activePrevMonthTotal = getProviderTotal(prevMonthByProvider, activeProvider);
     wowDeltaEl.textContent = formatDelta(activeWeekTotal, activePrevWeekTotal, activeCurrency);
     momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
-    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency);
-    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency);
+    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency, searchTerm);
+    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency, searchTerm);
     renderAnomalies(anomalies);
     renderFreshness(freshness);
     servicePageEl.textContent = `Page ${servicePageIndex + 1}`;
@@ -353,6 +369,9 @@ function initDateInputs() {
 }
 
 refreshBtn.addEventListener("click", refreshData);
+searchInput.addEventListener("input", () => {
+  refreshData();
+});
 pagerButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (btn.dataset.svc === "prev") {

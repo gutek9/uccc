@@ -48,7 +48,16 @@
         <div id="freshnessList" class="freshness-list"></div>
       </section>
 
-      <section class="time-controls-panel">
+      <section class="filter-bar">
+        <div class="filter-group">
+          <div class="tab-group">
+            <button class="tab-btn is-active" data-provider="aws">AWS</button>
+            <button class="tab-btn" data-provider="azure">Azure</button>
+          </div>
+          <div class="search-field">
+            <input type="search" id="searchInput" placeholder="Search service or account" />
+          </div>
+        </div>
         <div class="time-controls">
           <label>
             From
@@ -111,10 +120,6 @@
           <div>
             <h3>Breakdowns</h3>
             <p class="caption">Services and accounts, filtered by provider.</p>
-          </div>
-          <div class="tab-group">
-            <button class="tab-btn is-active" data-provider="aws">AWS</button>
-            <button class="tab-btn" data-provider="azure">Azure</button>
           </div>
         </div>
         <div id="providerSummary" class="summary-split"></div>
