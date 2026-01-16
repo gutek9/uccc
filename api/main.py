@@ -288,9 +288,12 @@ def anomalies(
     threshold: float = 0.3,
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
+    provider: Optional[str] = None,
     session: Session = Depends(get_session),
 ):
     deltas = day_over_day_deltas(from_date, to_date, session)
+    if provider:
+        deltas = [item for item in deltas if item.provider == provider]
     flagged = [item for item in deltas if item.delta_ratio is not None and item.delta_ratio >= threshold]
     return flagged
 

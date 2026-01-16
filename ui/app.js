@@ -265,8 +265,8 @@ async function refreshData() {
       fetchJson(`/costs/provider-totals${weekQuery}`),
       fetchJson(`/costs/provider-totals${monthQuery}`),
       fetchJson(`/costs/provider-totals${rangeQuery}`),
-      fetchJson(`/costs/by-service${rangeQuery}&limit=5&offset=0`),
-      fetchJson(`/costs/by-account${rangeQuery}&limit=5&offset=0`),
+      fetchJson(`/costs/by-service${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
+      fetchJson(`/costs/by-account${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
       fetchJson(`/costs/deltas${rangeQuery}`),
       fetchJson(
         `/costs/breakdowns${buildRangeQuery(
@@ -294,7 +294,7 @@ async function refreshData() {
           new Date(Date.now() - 7 * 86400000)
         )}&provider=${activeProvider}&limit=5`
       ),
-      fetchJson(`/costs/anomalies${rangeQuery}`),
+      fetchJson(`/costs/anomalies${buildRangeQuery(rangeQuery, `provider=${activeProvider}`)}`),
       fetchJson(`/costs/freshness`),
     ]);
 

@@ -71,47 +71,13 @@
         </div>
       </section>
 
-      <section class="grid insights">
-        <div class="panel">
+      <section class="grid insights global-insights">
+        <div class="panel span-full">
           <h3>Cost Trend (30 days)</h3>
           <div class="sparkline-wrap">
             <svg id="costSparkline" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
           </div>
           <p class="caption">Total daily cost across providers.</p>
-        </div>
-        <div class="panel">
-          <h3>Top Cost Drivers</h3>
-          <div class="provider-group">
-            <h4>Services</h4>
-            <ul id="topServices" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Accounts</h4>
-            <ul id="topAccounts" class="list"></ul>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>Momentum</h3>
-          <div class="metric-row">
-            <span>Week over week</span>
-            <strong id="wowDelta">—</strong>
-          </div>
-          <div class="metric-row">
-            <span>Month over month</span>
-            <strong id="momDelta">—</strong>
-          </div>
-          <p class="caption">Compares total spend against the previous period.</p>
-        </div>
-        <div class="panel">
-          <h3>Top Movers (WoW)</h3>
-          <div class="provider-group">
-            <h4>Services</h4>
-            <ul id="topServiceDeltas" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Accounts</h4>
-            <ul id="topAccountDeltas" class="list"></ul>
-          </div>
         </div>
       </section>
 
@@ -149,9 +115,45 @@
         </div>
       </section>
 
-      <section class="panel">
-        <h3>Anomalies</h3>
-        <ul id="anomalies" class="list"></ul>
+      <section class="grid insights provider-insights">
+        <div class="panel">
+          <h3>Top Cost Drivers</h3>
+          <div class="provider-group">
+            <h4>Services</h4>
+            <ul id="topServices" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>Accounts</h4>
+            <ul id="topAccounts" class="list"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Momentum</h3>
+          <div class="metric-row">
+            <span>Week over week</span>
+            <strong id="wowDelta">—</strong>
+          </div>
+          <div class="metric-row">
+            <span>Month over month</span>
+            <strong id="momDelta">—</strong>
+          </div>
+          <p class="caption">Compares total spend against the previous period.</p>
+        </div>
+        <div class="panel">
+          <h3>Top Movers (WoW)</h3>
+          <div class="provider-group">
+            <h4>Services</h4>
+            <ul id="topServiceDeltas" class="list"></ul>
+          </div>
+          <div class="provider-group">
+            <h4>Accounts</h4>
+            <ul id="topAccountDeltas" class="list"></ul>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Anomalies</h3>
+          <ul id="anomalies" class="list"></ul>
+        </div>
       </section>
     </main>
 

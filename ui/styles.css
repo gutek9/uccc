@@ -224,6 +224,18 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
+.global-insights {
+  margin-bottom: 8px;
+}
+
+.provider-insights {
+  margin-top: 8px;
+}
+
+.span-full {
+  grid-column: 1 / -1;
+}
+
 .panel {
   background: var(--panel);
   padding: 20px;
