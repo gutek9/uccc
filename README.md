@@ -43,6 +43,101 @@ API: http://localhost:8000
 
 Create a `.env` file (ignored by git) with your credentials and settings.
 
+## Step 0: Cloud Access Setup
+
+You must grant read-only billing access before UCCC can collect costs.
+
+### Azure (MCA or Subscription)
+
+**Create a Service Principal (SP)**
+```bash
+az login
+
+# Create SP without assignments (recommended)
+az ad sp create-for-rbac --name uccc-cost --skip-assignment
+```
+
+**Assign Cost Management Reader**
+
+Option A — **Subscription scope**:
+```bash
+az role assignment create \
+  --assignee <APP_ID> \
+  --role "Cost Management Reader" \
+  --scope /subscriptions/<SUBSCRIPTION_ID>
+```
+
+Option B — **MCA Invoice Section scope**:
+```bash
+az role assignment create \
+  --assignee <APP_ID> \
+  --role "Cost Management Reader" \
+  --scope /providers/Microsoft.Billing/billingAccounts/<BILLING_ACCOUNT>/billingProfiles/<BILLING_PROFILE>/invoiceSections/<INVOICE_SECTION>
+```
+
+Set these values in `.env`:
+```
+AZURE_TENANT_ID=<tenant>
+AZURE_CLIENT_ID=<appId>
+AZURE_CLIENT_SECRET=<password>
+AZURE_SUBSCRIPTION_IDS=sub-id-1,sub-id-2
+```
+
+### AWS (Cost Explorer)
+
+**Create IAM policy**
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CostExplorerRead",
+      "Effect": "Allow",
+      "Action": [
+        "ce:GetCostAndUsage",
+        "ce:GetCostForecast",
+        "ce:GetDimensionValues",
+        "ce:GetTags"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+**Create role (recommended)**
+```bash
+aws iam create-role \
+  --role-name UCCC-CostExplorer-Role \
+  --assume-role-policy-document file://trust.json
+
+aws iam attach-role-policy \
+  --role-name UCCC-CostExplorer-Role \
+  --policy-arn arn:aws:iam::<ACCOUNT_ID>:policy/UCCC-CostExplorer-Read
+```
+
+Example trust policy (`trust.json`) for same-account usage:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::<ACCOUNT_ID>:root" },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+```
+
+Set in `.env`:
+```
+AWS_ROLE_ARN=arn:aws:iam::<ACCOUNT_ID>:role/UCCC-CostExplorer-Role
+AWS_REGION=us-east-1
+```
+
+UCCC uses your local AWS CLI credentials by mounting `~/.aws` into containers.
+
 ### Common
 
 ```
