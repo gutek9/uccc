@@ -1,5 +1,5 @@
-from datetime import date, datetime, timedelta
 import csv
+from datetime import date, datetime, timedelta
 import io
 import os
 from typing import List, Optional
@@ -7,7 +7,7 @@ from typing import List, Optional
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import func, select
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from api import crud

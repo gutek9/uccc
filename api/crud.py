@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 from sqlalchemy import func, select
 from sqlalchemy.engine import Result

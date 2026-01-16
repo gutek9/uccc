@@ -149,6 +149,11 @@ API_KEY=optional-shared-secret
 
 If `API_KEY` is set, all API requests (except `/health`) require `X-API-Key`.
 
+For the UI, you can set a localStorage key in the browser console:
+```
+localStorage.setItem("uccc_api_key", "<your key>");
+```
+
 ### Azure (Cost Management API)
 
 ```

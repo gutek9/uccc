@@ -49,7 +49,10 @@ function toISODate(value) {
 }
 
 async function fetchJson(path) {
-  const response = await fetch(`${API_BASE}${path}`);
+  const apiKey = localStorage.getItem("uccc_api_key");
+  const response = await fetch(`${API_BASE}${path}`, {
+    headers: apiKey ? { "X-API-Key": apiKey } : {},
+  });
   if (!response.ok) {
     throw new Error(`Failed to fetch ${path}`);
   }
@@ -369,8 +372,14 @@ function initDateInputs() {
 }
 
 refreshBtn.addEventListener("click", refreshData);
+let searchDebounce = null;
 searchInput.addEventListener("input", () => {
-  refreshData();
+  if (searchDebounce) {
+    clearTimeout(searchDebounce);
+  }
+  searchDebounce = setTimeout(() => {
+    refreshData();
+  }, 250);
 });
 pagerButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
