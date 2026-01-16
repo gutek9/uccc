@@ -23,6 +23,7 @@ const wowDeltaEl = document.getElementById("wowDelta");
 const momDeltaEl = document.getElementById("momDelta");
 const topServiceDeltasEl = document.getElementById("topServiceDeltas");
 const topAccountDeltasEl = document.getElementById("topAccountDeltas");
+const signalsListEl = document.getElementById("signalsList");
 
 const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
@@ -152,6 +153,15 @@ function buildRangeQuery(baseQuery, params) {
   return `${baseQuery}${joiner}${params}`;
 }
 
+function setActiveProvider(provider) {
+  activeProvider = provider;
+  tabButtons.forEach((button) => button.classList.remove("is-active"));
+  const match = Array.from(tabButtons).find((btn) => btn.dataset.provider === provider);
+  if (match) {
+    match.classList.add("is-active");
+  }
+}
+
 function renderSparkline(points) {
   sparklineEl.innerHTML = "";
   if (!points.length) {
@@ -178,6 +188,31 @@ function renderSparkline(points) {
   sparklineEl.appendChild(line);
 }
 
+function renderSignals(rows, currencyMap) {
+  signalsListEl.innerHTML = "";
+  if (!rows.length) {
+    signalsListEl.innerHTML = "<div class=\"signal-card\"><div class=\"meta\">No critical signals</div></div>";
+    return;
+  }
+  rows.forEach((signal) => {
+    const card = document.createElement("div");
+    const currency = currencyMap[signal.provider] || "USD";
+    card.className = `signal-card ${signal.severity === "high" ? "is-high" : ""}`;
+    const pct = signal.impact_pct ? `${(signal.impact_pct * 100).toFixed(1)}%` : "—";
+    card.innerHTML = `
+      <strong>${signal.provider} · ${signal.entity_type}</strong>
+      <div class="impact">${formatCost(signal.impact_cost, currency)} (${pct})</div>
+      <div class="meta">${signal.date}</div>
+    `;
+    card.addEventListener("click", () => {
+      setActiveProvider(signal.provider);
+      fromInput.value = signal.date;
+      toInput.value = signal.date;
+      refreshData();
+    });
+    signalsListEl.appendChild(card);
+  });
+}
 function renderDeltaList(container, rows, currency = "USD", filterTerm = "") {
   container.innerHTML = "";
   if (!rows.length) {
@@ -258,6 +293,7 @@ async function refreshData() {
       prevMonthByProvider,
       serviceDeltas,
       accountDeltas,
+      signals,
       anomalies,
       freshness,
     ] = await Promise.all([
@@ -271,6 +307,7 @@ async function refreshData() {
       fetchJson(`/costs/by-service${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
       fetchJson(`/costs/by-account${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
       fetchJson(`/costs/deltas${rangeQuery}`),
+      fetchJson(`/signals${rangeQuery}`),
       fetchJson(
         `/costs/breakdowns${buildRangeQuery(
           rangeQuery,
@@ -316,6 +353,7 @@ async function refreshData() {
       acc[row.provider] = row.currency || "USD";
       return acc;
     }, {});
+    renderSignals(signals, currencyMap);
 
     const trendTotals = {};
     trendRows.forEach((row) => {
@@ -399,9 +437,7 @@ pagerButtons.forEach((btn) => {
 
 tabButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    tabButtons.forEach((button) => button.classList.remove("is-active"));
-    btn.classList.add("is-active");
-    activeProvider = btn.dataset.provider;
+    setActiveProvider(btn.dataset.provider);
     servicePageIndex = 0;
     accountPageIndex = 0;
     refreshData();

@@ -214,6 +214,49 @@ body {
   box-shadow: 0 12px 24px rgba(227, 81, 55, 0.2);
 }
 
+.signals-panel {
+  display: grid;
+  gap: 12px;
+  padding: 20px 24px;
+}
+
+.signals-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.signal-card {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #2e2727;
+  background: linear-gradient(135deg, rgba(26, 21, 21, 0.95), rgba(30, 24, 24, 0.85));
+  display: grid;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.signal-card strong {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+}
+
+.signal-card .impact {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.signal-card .meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.signal-card.is-high {
+  border-color: rgba(227, 81, 55, 0.7);
+  box-shadow: 0 14px 22px rgba(227, 81, 55, 0.25);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

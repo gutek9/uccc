@@ -64,6 +64,16 @@ class DeltaGroupResponse(BaseModel):
     delta_ratio: Optional[float] = None
 
 
+class SignalResponse(BaseModel):
+    severity: str
+    provider: str
+    entity_type: str
+    entity_id: str
+    impact_cost: float
+    impact_pct: Optional[float] = None
+    date: date
+
+
 class TagCoverageResponse(BaseModel):
     required_tags: List[str]
     total_cost: float

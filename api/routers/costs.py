@@ -16,6 +16,7 @@ from api.schemas import (
     GroupedCostResponse,
     ProviderBreakdownResponse,
     ProviderTotalResponse,
+    SignalResponse,
     TotalCostResponse,
 )
 from api.services.deltas import grouped_delta
@@ -210,6 +211,36 @@ def anomalies(
         deltas = [item for item in deltas if item.provider == provider]
     flagged = [item for item in deltas if item.delta_ratio is not None and item.delta_ratio >= threshold]
     return flagged
+
+
+@router.get("/signals", response_model=List[SignalResponse])
+def signals(
+    from_date: Optional[date] = Query(default=None, alias="from"),
+    to_date: Optional[date] = Query(default=None, alias="to"),
+    threshold: float = 0.3,
+    limit: int = 5,
+    session: Session = Depends(get_session),
+):
+    deltas = day_over_day_deltas(from_date, to_date, session)
+    signals_list: list[SignalResponse] = []
+    for item in deltas:
+        if item.delta_ratio is None or item.delta_ratio < threshold:
+            continue
+        impact_cost = item.total_cost - (item.previous_day_cost or 0.0)
+        severity = "high" if item.delta_ratio >= threshold * 2 and impact_cost >= 500 else "medium"
+        signals_list.append(
+            SignalResponse(
+                severity=severity,
+                provider=item.provider,
+                entity_type="day",
+                entity_id=item.date.isoformat(),
+                impact_cost=impact_cost,
+                impact_pct=item.delta_ratio,
+                date=item.date,
+            )
+        )
+    signals_list.sort(key=lambda sig: abs(sig.impact_cost), reverse=True)
+    return signals_list[:limit]
 
 
 @router.get("/costs/breakdowns", response_model=List[ProviderBreakdownResponse])
