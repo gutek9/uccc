@@ -64,14 +64,23 @@ class DeltaGroupResponse(BaseModel):
     delta_ratio: Optional[float] = None
 
 
+class SignalTimeframe(BaseModel):
+    start: date
+    end: date
+    compare_start: date
+    compare_end: date
+
+
 class SignalResponse(BaseModel):
     severity: str
     provider: str
+    scope: str
     entity_type: str
     entity_id: str
     impact_cost: float
     impact_pct: Optional[float] = None
-    date: date
+    timeframe: SignalTimeframe
+    root_cause_hint: Optional[str] = None
 
 
 class TagCoverageResponse(BaseModel):

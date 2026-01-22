@@ -24,6 +24,9 @@ const momDeltaEl = document.getElementById("momDelta");
 const topServiceDeltasEl = document.getElementById("topServiceDeltas");
 const topAccountDeltasEl = document.getElementById("topAccountDeltas");
 const signalsListEl = document.getElementById("signalsList");
+const errorBannerEl = document.getElementById("errorBanner");
+const timelineHeatmapEl = document.getElementById("timelineHeatmap");
+const timelineMetaEl = document.getElementById("timelineMeta");
 
 const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
@@ -33,7 +36,15 @@ const SERVICE_PAGE_SIZE = 10;
 const ACCOUNT_PAGE_SIZE = 10;
 let servicePageIndex = 0;
 let accountPageIndex = 0;
-let activeProvider = "aws";
+const filterState = {
+  provider: "aws",
+  from: "",
+  to: "",
+  search: "",
+};
+const TIMELINE_DAYS = 14;
+const ANOMALY_RATIO_THRESHOLD = 0.3;
+const ANOMALY_IMPACT_THRESHOLD = 200;
 
 function formatCost(value, currency = "USD") {
   const formatter = new Intl.NumberFormat(undefined, {
@@ -49,6 +60,26 @@ function toISODate(value) {
   return value.toISOString().slice(0, 10);
 }
 
+function toDateOnly(value) {
+  const date = new Date(value);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function buildCompareRange(fromDate, toDate) {
+  if (!fromDate || !toDate) {
+    return null;
+  }
+  const start = toDateOnly(fromDate);
+  const end = toDateOnly(toDate);
+  const diffDays = Math.max(0, Math.round((end - start) / 86400000));
+  const compareEnd = new Date(start.getTime() - 86400000);
+  const compareStart = new Date(compareEnd.getTime() - diffDays * 86400000);
+  return {
+    compare_from: toISODate(compareStart),
+    compare_to: toISODate(compareEnd),
+  };
+}
+
 async function fetchJson(path) {
   const apiKey = localStorage.getItem("uccc_api_key");
   const response = await fetch(`${API_BASE}${path}`, {
@@ -60,20 +91,17 @@ async function fetchJson(path) {
   return response.json();
 }
 
-function renderList(container, rows, filterTerm = "") {
+function renderList(container, rows, emptyLabel = "No data") {
   container.innerHTML = "";
+  if (!Array.isArray(rows)) {
+    container.innerHTML = `<li>${emptyLabel}</li>`;
+    return;
+  }
   if (!rows.length) {
-    container.innerHTML = "<li>No data</li>";
+    container.innerHTML = `<li>${emptyLabel}</li>`;
     return;
   }
-  const filtered = filterTerm
-    ? rows.filter((row) => (row.key || row.provider || "").toLowerCase().includes(filterTerm))
-    : rows;
-  if (!filtered.length) {
-    container.innerHTML = "<li>No matches</li>";
-    return;
-  }
-  filtered.forEach((row) => {
+  rows.forEach((row) => {
     const li = document.createElement("li");
     const label = row.key ?? row.provider ?? "—";
     const currency = row.currency || "USD";
@@ -115,6 +143,85 @@ function formatDateTime(value) {
   });
 }
 
+function formatDayLabel(value) {
+  const date = new Date(value);
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function buildDayLabels(startDate, count) {
+  const days = [];
+  for (let idx = 0; idx < count; idx += 1) {
+    const day = new Date(startDate.getTime() + idx * 86400000);
+    days.push(toISODate(day));
+  }
+  return days;
+}
+
+function median(values) {
+  if (!values.length) {
+    return 0;
+  }
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
+}
+
+function renderTimeline(rows, provider, currency = "USD") {
+  if (!timelineHeatmapEl || !timelineMetaEl) {
+    return;
+  }
+  timelineHeatmapEl.innerHTML = "";
+  const today = toDateOnly(new Date());
+  const start = new Date(today.getTime() - (TIMELINE_DAYS - 1) * 86400000);
+  const days = buildDayLabels(start, TIMELINE_DAYS);
+  const providerRows = rows.filter((row) => row.provider === provider);
+  const byDate = providerRows.reduce((acc, row) => {
+    acc[row.date] = row;
+    return acc;
+  }, {});
+  const totals = providerRows.map((row) => row.total_cost || 0);
+  const baseline = median(totals);
+  days.forEach((day) => {
+    const item = byDate[day];
+    const cell = document.createElement("button");
+    cell.className = "timeline-cell";
+    cell.type = "button";
+    if (!item) {
+      cell.classList.add("is-muted");
+      cell.textContent = formatDayLabel(day);
+      timelineHeatmapEl.appendChild(cell);
+      return;
+    }
+    const impact = item.previous_day_cost === null || item.previous_day_cost === undefined ? 0 : item.total_cost - item.previous_day_cost;
+    const ratio = item.delta_ratio || 0;
+    if (ratio >= ANOMALY_RATIO_THRESHOLD && impact >= ANOMALY_IMPACT_THRESHOLD) {
+      cell.classList.add(ratio >= ANOMALY_RATIO_THRESHOLD * 2 ? "is-high" : "is-medium");
+    } else if (ratio >= ANOMALY_RATIO_THRESHOLD) {
+      cell.classList.add("is-low");
+    }
+    cell.textContent = formatDayLabel(day);
+    const pct = ratio ? `${(ratio * 100).toFixed(1)}%` : "—";
+    cell.title = `${day} · ${formatCost(item.total_cost || 0, currency)} · Δ ${formatCost(impact, currency)} (${pct})`;
+    cell.addEventListener("click", () => {
+      filterState.from = day;
+      filterState.to = day;
+      fromInput.value = day;
+      toInput.value = day;
+      servicePageIndex = 0;
+      accountPageIndex = 0;
+      refreshData();
+    });
+    timelineHeatmapEl.appendChild(cell);
+  });
+  const baselineLabel = baseline ? `${formatCost(baseline, currency)} median` : "—";
+  timelineMetaEl.textContent = `Baseline: ${baselineLabel} · Highlight: ≥${Math.round(
+    ANOMALY_RATIO_THRESHOLD * 100
+  )}% & ≥${formatCost(ANOMALY_IMPACT_THRESHOLD, currency)}`;
+}
+
 function renderAnomalies(rows) {
   anomaliesEl.innerHTML = "";
   if (!rows.length) {
@@ -148,13 +255,24 @@ function renderSummarySplit(container, rows, highlightKey = null) {
   });
 }
 
-function buildRangeQuery(baseQuery, params) {
-  const joiner = baseQuery ? "&" : "?";
-  return `${baseQuery}${joiner}${params}`;
+function buildQuery(params) {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      return;
+    }
+    const trimmed = typeof value === "string" ? value.trim() : value;
+    if (trimmed === "") {
+      return;
+    }
+    searchParams.set(key, trimmed);
+  });
+  const query = searchParams.toString();
+  return query ? `?${query}` : "";
 }
 
 function setActiveProvider(provider) {
-  activeProvider = provider;
+  filterState.provider = provider;
   tabButtons.forEach((button) => button.classList.remove("is-active"));
   const match = Array.from(tabButtons).find((btn) => btn.dataset.provider === provider);
   if (match) {
@@ -188,45 +306,67 @@ function renderSparkline(points) {
   sparklineEl.appendChild(line);
 }
 
-function renderSignals(rows, currencyMap) {
+function renderSignals(rows, currencyMap, freshnessMap) {
   signalsListEl.innerHTML = "";
-  if (!rows.length) {
+  if (!rows || !rows.length) {
     signalsListEl.innerHTML = "<div class=\"signal-card\"><div class=\"meta\">No critical signals</div></div>";
     return;
   }
-  rows.forEach((signal) => {
+  const filtered = rows.filter((signal) => signal && signal.provider && signal.entity_id);
+  if (!filtered.length) {
+    signalsListEl.innerHTML = "<div class=\"signal-card\"><div class=\"meta\">No critical signals</div></div>";
+    return;
+  }
+  filtered.forEach((signal) => {
     const card = document.createElement("div");
     const currency = currencyMap[signal.provider] || "USD";
     card.className = `signal-card ${signal.severity === "high" ? "is-high" : ""}`;
     const pct = signal.impact_pct ? `${(signal.impact_pct * 100).toFixed(1)}%` : "—";
+    const impact = Number.isFinite(signal.impact_cost) ? signal.impact_cost : 0;
+    const range =
+      signal.timeframe && signal.timeframe.start && signal.timeframe.end
+        ? `${formatShortDate(signal.timeframe.start)} → ${formatShortDate(signal.timeframe.end)}`
+        : "—";
+    const freshnessDate = freshnessMap && freshnessMap[signal.provider] ? formatShortDate(freshnessMap[signal.provider]) : null;
+    const freshnessNote = freshnessDate ? `Data through ${freshnessDate}` : null;
+    const label = `${signal.provider} · ${signal.entity_type}: ${signal.entity_id}`;
     card.innerHTML = `
-      <strong>${signal.provider} · ${signal.entity_type}</strong>
-      <div class="impact">${formatCost(signal.impact_cost, currency)} (${pct})</div>
-      <div class="meta">${signal.date}</div>
+      <strong>${label}</strong>
+      <div class="impact">${formatCost(impact, currency)} (${pct})</div>
+      <div class="meta">${range}</div>
+      ${freshnessNote ? `<div class="meta">${freshnessNote}</div>` : ""}
+      ${signal.root_cause_hint ? `<div class="meta">${signal.root_cause_hint}</div>` : ""}
     `;
     card.addEventListener("click", () => {
       setActiveProvider(signal.provider);
-      fromInput.value = signal.date;
-      toInput.value = signal.date;
+      if (signal.timeframe && signal.timeframe.start && signal.timeframe.end) {
+        filterState.from = signal.timeframe.start;
+        filterState.to = signal.timeframe.end;
+        fromInput.value = signal.timeframe.start;
+        toInput.value = signal.timeframe.end;
+      }
+      if (signal.entity_id) {
+        filterState.search = signal.entity_id;
+        searchInput.value = signal.entity_id;
+      }
+      servicePageIndex = 0;
+      accountPageIndex = 0;
       refreshData();
     });
     signalsListEl.appendChild(card);
   });
 }
-function renderDeltaList(container, rows, currency = "USD", filterTerm = "") {
+function renderDeltaList(container, rows, currency = "USD", emptyLabel = "No data") {
   container.innerHTML = "";
+  if (!Array.isArray(rows)) {
+    container.innerHTML = `<li>${emptyLabel}</li>`;
+    return;
+  }
   if (!rows.length) {
-    container.innerHTML = "<li>No data</li>";
+    container.innerHTML = `<li>${emptyLabel}</li>`;
     return;
   }
-  const filtered = filterTerm
-    ? rows.filter((row) => (row.key || "").toLowerCase().includes(filterTerm))
-    : rows;
-  if (!filtered.length) {
-    container.innerHTML = "<li>No matches</li>";
-    return;
-  }
-  filtered.forEach((row) => {
+  rows.forEach((row) => {
     const li = document.createElement("li");
     const pct = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
     const sign = row.delta >= 0 ? "+" : "";
@@ -241,6 +381,12 @@ function formatDelta(current, previous, currency = "USD") {
   const sign = delta >= 0 ? "+" : "";
   const pct = ratio === null ? "—" : `${(ratio * 100).toFixed(1)}%`;
   return `${sign}${formatCost(delta, currency)} (${pct})`;
+}
+
+function syncFilterStateFromInputs() {
+  filterState.from = fromInput.value;
+  filterState.to = toInput.value;
+  filterState.search = searchInput.value.trim();
 }
 
 function getPrevMonthStart() {
@@ -261,9 +407,14 @@ function getProviderTotal(rows, provider) {
 }
 
 async function refreshData() {
-  const fromDate = fromInput.value;
-  const toDate = toInput.value;
-  const rangeQuery = fromDate && toDate ? `?from=${fromDate}&to=${toDate}` : "";
+  syncFilterStateFromInputs();
+  const fromDate = filterState.from;
+  const toDate = filterState.to;
+  const rangeQuery = buildQuery({ from: fromDate, to: toDate });
+  if (errorBannerEl) {
+    errorBannerEl.classList.add("is-hidden");
+    errorBannerEl.textContent = "";
+  }
 
   const today = toISODate(new Date());
   const todayQuery = `?from=${today}&to=${today}`;
@@ -273,6 +424,9 @@ async function refreshData() {
   const monthStart = new Date();
   monthStart.setDate(1);
   const monthQuery = `?from=${toISODate(monthStart)}&to=${today}`;
+  const compareRange = buildCompareRange(fromDate, toDate);
+  const timelineStart = toISODate(new Date(Date.now() - (TIMELINE_DAYS - 1) * 86400000));
+  const timelineQuery = `?from=${timelineStart}&to=${today}`;
 
   try {
     const serviceOffset = servicePageIndex * SERVICE_PAGE_SIZE;
@@ -288,13 +442,14 @@ async function refreshData() {
       topServices,
       topAccounts,
       trendRows,
+      signals,
       breakdowns,
       prevWeekByProvider,
       prevMonthByProvider,
       serviceDeltas,
       accountDeltas,
-      signals,
       anomalies,
+      timelineRows,
       freshness,
     ] = await Promise.all([
       fetchJson(`/costs/total${todayQuery}`),
@@ -304,15 +459,38 @@ async function refreshData() {
       fetchJson(`/costs/provider-totals${weekQuery}`),
       fetchJson(`/costs/provider-totals${monthQuery}`),
       fetchJson(`/costs/provider-totals${rangeQuery}`),
-      fetchJson(`/costs/by-service${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
-      fetchJson(`/costs/by-account${buildRangeQuery(rangeQuery, `provider=${activeProvider}&limit=5&offset=0`)}`),
-      fetchJson(`/costs/deltas${rangeQuery}`),
-      fetchJson(`/signals${rangeQuery}`),
       fetchJson(
-        `/costs/breakdowns${buildRangeQuery(
-          rangeQuery,
-          `provider=${activeProvider}&limit=${SERVICE_PAGE_SIZE}&offset=${serviceOffset}&account_offset=${accountOffset}`
-        )}`
+        `/costs/by-service${buildQuery({
+          from: fromDate,
+          to: toDate,
+          provider: filterState.provider,
+          search: filterState.search,
+          limit: 5,
+          offset: 0,
+        })}`
+      ),
+      fetchJson(
+        `/costs/by-account${buildQuery({
+          from: fromDate,
+          to: toDate,
+          provider: filterState.provider,
+          search: filterState.search,
+          limit: 5,
+          offset: 0,
+        })}`
+      ),
+      fetchJson(`/costs/deltas${rangeQuery}`),
+      fetchJson(`/signals${buildQuery({ from: fromDate, to: toDate, provider: filterState.provider })}`),
+      fetchJson(
+        `/costs/breakdowns${buildQuery({
+          from: fromDate,
+          to: toDate,
+          provider: filterState.provider,
+          search: filterState.search,
+          limit: SERVICE_PAGE_SIZE,
+          offset: serviceOffset,
+          account_offset: accountOffset,
+        })}`
       ),
       fetchJson(
         `/costs/provider-totals?from=${toISODate(new Date(Date.now() - 13 * 86400000))}&to=${toISODate(
@@ -321,20 +499,29 @@ async function refreshData() {
       ),
       fetchJson(`/costs/provider-totals?from=${getPrevMonthStart()}&to=${getPrevMonthEnd()}`),
       fetchJson(
-        `/costs/deltas/by-service?from=${toISODate(new Date(Date.now() - 6 * 86400000))}&to=${toISODate(
-          new Date()
-        )}&compare_from=${toISODate(new Date(Date.now() - 13 * 86400000))}&compare_to=${toISODate(
-          new Date(Date.now() - 7 * 86400000)
-        )}&provider=${activeProvider}&limit=5`
+        `/costs/deltas/by-service${buildQuery({
+          from: fromDate,
+          to: toDate,
+          compare_from: compareRange ? compareRange.compare_from : undefined,
+          compare_to: compareRange ? compareRange.compare_to : undefined,
+          provider: filterState.provider,
+          search: filterState.search,
+          limit: 5,
+        })}`
       ),
       fetchJson(
-        `/costs/deltas/by-account?from=${toISODate(new Date(Date.now() - 6 * 86400000))}&to=${toISODate(
-          new Date()
-        )}&compare_from=${toISODate(new Date(Date.now() - 13 * 86400000))}&compare_to=${toISODate(
-          new Date(Date.now() - 7 * 86400000)
-        )}&provider=${activeProvider}&limit=5`
+        `/costs/deltas/by-account${buildQuery({
+          from: fromDate,
+          to: toDate,
+          compare_from: compareRange ? compareRange.compare_from : undefined,
+          compare_to: compareRange ? compareRange.compare_to : undefined,
+          provider: filterState.provider,
+          search: filterState.search,
+          limit: 5,
+        })}`
       ),
-      fetchJson(`/costs/anomalies${buildRangeQuery(rangeQuery, `provider=${activeProvider}`)}`),
+      fetchJson(`/costs/anomalies${buildQuery({ from: fromDate, to: toDate, provider: filterState.provider })}`),
+      fetchJson(`/costs/deltas${timelineQuery}`),
       fetchJson(`/costs/freshness`),
     ]);
 
@@ -345,15 +532,21 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider);
     renderSummarySplit(monthSplitEl, monthByProvider);
 
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    renderSummarySplit(providerSummaryEl, providerTotalsRange, activeProvider);
-    renderList(topServicesEl, topServices, searchTerm);
-    renderList(topAccountsEl, topAccounts, searchTerm);
+    const emptyLabel = filterState.search ? "No results" : "No data";
+    renderSummarySplit(providerSummaryEl, providerTotalsRange, filterState.provider);
+    renderList(topServicesEl, topServices, emptyLabel);
+    renderList(topAccountsEl, topAccounts, emptyLabel);
     const currencyMap = providerTotalsRange.reduce((acc, row) => {
       acc[row.provider] = row.currency || "USD";
       return acc;
     }, {});
-    renderSignals(signals, currencyMap);
+    const freshnessMap = freshness.reduce((acc, row) => {
+      if (row.provider && row.last_entry_date) {
+        acc[row.provider] = row.last_entry_date;
+      }
+      return acc;
+    }, {});
+    renderSignals(signals, currencyMap, freshnessMap);
 
     const trendTotals = {};
     trendRows.forEach((row) => {
@@ -366,24 +559,30 @@ async function refreshData() {
     renderSparkline(trendPoints);
 
     const breakdown = breakdowns[0];
-    renderList(breakdownServicesEl, breakdown ? breakdown.services : [], searchTerm);
-    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : [], searchTerm);
+    renderList(breakdownServicesEl, breakdown ? breakdown.services : [], emptyLabel);
+    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : [], emptyLabel);
     updatePagerButtons(breakdown);
-    const activeCurrency = currencyMap[activeProvider] || "USD";
-    const activeWeekTotal = getProviderTotal(weekByProvider, activeProvider);
-    const activeMonthTotal = getProviderTotal(monthByProvider, activeProvider);
-    const activePrevWeekTotal = getProviderTotal(prevWeekByProvider, activeProvider);
-    const activePrevMonthTotal = getProviderTotal(prevMonthByProvider, activeProvider);
+    const activeCurrency = currencyMap[filterState.provider] || "USD";
+    const activeWeekTotal = getProviderTotal(weekByProvider, filterState.provider);
+    const activeMonthTotal = getProviderTotal(monthByProvider, filterState.provider);
+    const activePrevWeekTotal = getProviderTotal(prevWeekByProvider, filterState.provider);
+    const activePrevMonthTotal = getProviderTotal(prevMonthByProvider, filterState.provider);
     wowDeltaEl.textContent = formatDelta(activeWeekTotal, activePrevWeekTotal, activeCurrency);
     momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
-    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency, searchTerm);
-    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency, searchTerm);
+    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency, emptyLabel);
+    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency, emptyLabel);
     renderAnomalies(anomalies);
+    renderTimeline(timelineRows, filterState.provider, activeCurrency);
     renderFreshness(freshness);
     servicePageEl.textContent = `Page ${servicePageIndex + 1}`;
     accountPageEl.textContent = `Page ${accountPageIndex + 1}`;
   } catch (error) {
     console.error(error);
+    if (errorBannerEl) {
+      errorBannerEl.textContent =
+        "Data load failed. Check API availability and API key, then refresh. See console for details.";
+      errorBannerEl.classList.remove("is-hidden");
+    }
   }
 }
 
@@ -407,6 +606,8 @@ function initDateInputs() {
   thirtyDaysAgo.setDate(today.getDate() - 30);
   fromInput.value = toISODate(thirtyDaysAgo);
   toInput.value = toISODate(today);
+  filterState.from = fromInput.value;
+  filterState.to = toInput.value;
 }
 
 refreshBtn.addEventListener("click", refreshData);
@@ -416,6 +617,8 @@ searchInput.addEventListener("input", () => {
     clearTimeout(searchDebounce);
   }
   searchDebounce = setTimeout(() => {
+    servicePageIndex = 0;
+    accountPageIndex = 0;
     refreshData();
   }, 250);
 });

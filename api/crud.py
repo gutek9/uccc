@@ -33,12 +33,16 @@ def get_grouped_cost(
     end: date,
     group_by: CostEntry,
     provider: str | None = None,
+    search_term: str | None = None,
     limit: int | None = None,
     offset: int | None = None,
 ) -> List[Tuple[str, float]]:
     stmt = select(group_by, func.sum(CostEntry.cost)).where(CostEntry.date.between(start, end))
     if provider:
         stmt = stmt.where(CostEntry.provider == provider)
+    if search_term:
+        pattern = f"%{search_term.strip().lower()}%"
+        stmt = stmt.where(func.lower(group_by).like(pattern))
     stmt = stmt.group_by(group_by).order_by(func.sum(CostEntry.cost).desc())
     if limit is not None:
         stmt = stmt.limit(limit)

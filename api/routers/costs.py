@@ -21,6 +21,7 @@ from api.schemas import (
 )
 from api.services.deltas import grouped_delta
 from api.services.snapshot import build_snapshot
+from api.services.signals import build_signals
 from core.anomaly import compute_day_over_day
 
 router = APIRouter()
@@ -92,6 +93,7 @@ def by_service(
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
     provider: Optional[str] = None,
+    search: Optional[str] = None,
     limit: int = 10,
     offset: int = 0,
     session: Session = Depends(get_session),
@@ -103,6 +105,7 @@ def by_service(
         end,
         CostEntry.service,
         provider=provider,
+        search_term=search,
         limit=limit,
         offset=offset,
     )
@@ -114,6 +117,7 @@ def by_account(
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
     provider: Optional[str] = None,
+    search: Optional[str] = None,
     limit: int = 10,
     offset: int = 0,
     session: Session = Depends(get_session),
@@ -125,6 +129,7 @@ def by_account(
         end,
         CostEntry.account_id,
         provider=provider,
+        search_term=search,
         limit=limit,
         offset=offset,
     )
@@ -219,28 +224,11 @@ def signals(
     to_date: Optional[date] = Query(default=None, alias="to"),
     threshold: float = 0.3,
     limit: int = 5,
+    provider: Optional[str] = None,
     session: Session = Depends(get_session),
 ):
-    deltas = day_over_day_deltas(from_date, to_date, session)
-    signals_list: list[SignalResponse] = []
-    for item in deltas:
-        if item.delta_ratio is None or item.delta_ratio < threshold:
-            continue
-        impact_cost = item.total_cost - (item.previous_day_cost or 0.0)
-        severity = "high" if item.delta_ratio >= threshold * 2 and impact_cost >= 500 else "medium"
-        signals_list.append(
-            SignalResponse(
-                severity=severity,
-                provider=item.provider,
-                entity_type="day",
-                entity_id=item.date.isoformat(),
-                impact_cost=impact_cost,
-                impact_pct=item.delta_ratio,
-                date=item.date,
-            )
-        )
-    signals_list.sort(key=lambda sig: abs(sig.impact_cost), reverse=True)
-    return signals_list[:limit]
+    start, end = parse_date_range(from_date, to_date)
+    return build_signals(session, start, end, threshold, limit, provider=provider)
 
 
 @router.get("/costs/breakdowns", response_model=List[ProviderBreakdownResponse])
@@ -248,6 +236,7 @@ def breakdowns(
     from_date: Optional[date] = Query(default=None, alias="from"),
     to_date: Optional[date] = Query(default=None, alias="to"),
     provider: Optional[str] = None,
+    search: Optional[str] = None,
     limit: int = 10,
     offset: int = 0,
     account_offset: int = 0,
@@ -265,6 +254,7 @@ def breakdowns(
             end,
             CostEntry.service,
             provider=item,
+            search_term=search,
             limit=limit,
             offset=offset,
         )
@@ -274,6 +264,7 @@ def breakdowns(
             end,
             CostEntry.account_id,
             provider=item,
+            search_term=search,
             limit=limit,
             offset=account_offset,
         )
@@ -295,6 +286,7 @@ def deltas_by_service(
     compare_from: date = Query(alias="compare_from"),
     compare_to: date = Query(alias="compare_to"),
     provider: Optional[str] = None,
+    search: Optional[str] = None,
     limit: int = 5,
     session: Session = Depends(get_session),
 ):
@@ -307,6 +299,7 @@ def deltas_by_service(
         compare_to,
         provider,
         limit,
+        search_term=search,
     )
 
 
@@ -317,6 +310,7 @@ def deltas_by_account(
     compare_from: date = Query(alias="compare_from"),
     compare_to: date = Query(alias="compare_to"),
     provider: Optional[str] = None,
+    search: Optional[str] = None,
     limit: int = 5,
     session: Session = Depends(get_session),
 ):
@@ -329,6 +323,7 @@ def deltas_by_account(
         compare_to,
         provider,
         limit,
+        search_term=search,
     )
 
 

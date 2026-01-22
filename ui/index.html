@@ -9,6 +9,7 @@
   <body>
     <div class="backdrop"></div>
     <main class="app">
+      <div id="errorBanner" class="error-banner is-hidden"></div>
       <header class="hero">
         <div>
           <p class="eyebrow">Unified Cloud Cost Center</p>
@@ -52,7 +53,7 @@
         <div class="panel-header">
           <div>
             <h3>Critical Signals</h3>
-            <p class="caption">Largest anomalies across providers for the selected range.</p>
+            <p class="caption">Largest cost spikes for the selected provider and range.</p>
           </div>
         </div>
         <div id="signalsList" class="signals-list"></div>
@@ -66,6 +67,7 @@
           </div>
           <div class="search-field">
             <input type="search" id="searchInput" placeholder="Search service or account" />
+            <span class="search-scope">Scope: service + account</span>
           </div>
         </div>
         <div class="time-controls">
@@ -147,10 +149,10 @@
             <span>Month over month</span>
             <strong id="momDelta">—</strong>
           </div>
-          <p class="caption">Compares total spend against the previous period.</p>
+          <p class="caption">Shows change vs prior period for the selected provider (last 7 days vs previous 7, month-to-date vs prior month).</p>
         </div>
         <div class="panel">
-          <h3>Top Movers (WoW)</h3>
+          <h3>Top Movers</h3>
           <div class="provider-group">
             <h4>Services</h4>
             <ul id="topServiceDeltas" class="list"></ul>
@@ -159,6 +161,12 @@
             <h4>Accounts</h4>
             <ul id="topAccountDeltas" class="list"></ul>
           </div>
+          <p class="caption">Compares the selected range to the previous period.</p>
+        </div>
+        <div class="panel timeline-panel">
+          <h3>Anomaly Timeline (14 days)</h3>
+          <div id="timelineHeatmap" class="timeline-heatmap"></div>
+          <p id="timelineMeta" class="caption">Baseline: —</p>
         </div>
         <div class="panel">
           <h3>Anomalies</h3>
