@@ -45,6 +45,12 @@ const filterState = {
 const TIMELINE_DAYS = 14;
 const ANOMALY_RATIO_THRESHOLD = 0.3;
 const ANOMALY_IMPACT_THRESHOLD = 200;
+const CHART_THRESHOLD = 5;
+const PROVIDER_COLORS = {
+  aws: "#e35137",
+  azure: "#f08a6b",
+  gcp: "#f4c7b2",
+};
 
 function formatCost(value, currency = "USD") {
   const formatter = new Intl.NumberFormat(undefined, {
@@ -91,23 +97,113 @@ async function fetchJson(path) {
   return response.json();
 }
 
-function renderList(container, rows, emptyLabel = "No data") {
+function renderList(container, rows, options = {}) {
+  const { emptyLabel = "No data", mode = "auto", currency = "USD" } = options;
   container.innerHTML = "";
   if (!Array.isArray(rows)) {
-    container.innerHTML = `<li>${emptyLabel}</li>`;
+    container.innerHTML = `<ul class="list-items"><li>${emptyLabel}</li></ul>`;
     return;
   }
   if (!rows.length) {
-    container.innerHTML = `<li>${emptyLabel}</li>`;
+    container.innerHTML = `<ul class="list-items"><li>${emptyLabel}</li></ul>`;
     return;
   }
+  let resolvedMode = mode;
+  if (resolvedMode === "auto") {
+    resolvedMode = rows.length <= CHART_THRESHOLD ? "chart" : "table";
+  }
+  if (resolvedMode === "table") {
+    renderCostTable(container, rows, currency);
+    return;
+  }
+  if (resolvedMode === "chart") {
+    renderCostChart(container, rows, currency);
+    return;
+  }
+  const list = document.createElement("ul");
+  list.className = "list-items";
   rows.forEach((row) => {
     const li = document.createElement("li");
     const label = row.key ?? row.provider ?? "—";
-    const currency = row.currency || "USD";
-    li.innerHTML = `<span>${label}</span><strong>${formatCost(row.total_cost, currency)}</strong>`;
-    container.appendChild(li);
+    const rowCurrency = row.currency || currency;
+    li.innerHTML = `<span>${label}</span><strong>${formatCost(row.total_cost, rowCurrency)}</strong>`;
+    list.appendChild(li);
   });
+  container.appendChild(list);
+}
+
+function renderCostTable(container, rows, currency) {
+  const table = document.createElement("table");
+  table.className = "table";
+  table.innerHTML = "<thead><tr><th>Item</th><th>Cost</th></tr></thead>";
+  const tbody = document.createElement("tbody");
+  rows.forEach((row) => {
+    const label = row.key ?? row.provider ?? "—";
+    const rowCurrency = row.currency || currency;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${label}</td><td>${formatCost(row.total_cost, rowCurrency)}</td>`;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function renderCostChart(container, rows, currency) {
+  const maxValue = Math.max(...rows.map((row) => row.total_cost || 0), 1);
+  const list = document.createElement("div");
+  list.className = "bar-list";
+  rows.forEach((row) => {
+    const value = row.total_cost || 0;
+    const label = row.key ?? row.provider ?? "—";
+    const rowCurrency = row.currency || currency;
+    const pct = Math.min(100, (value / maxValue) * 100);
+    const item = document.createElement("div");
+    item.className = "bar-row";
+    item.innerHTML = `
+      <div class="bar-meta"><span>${label}</span><strong>${formatCost(value, rowCurrency)}</strong></div>
+      <div class="mini-bar-track"><div class="mini-bar-fill" style="width: ${pct.toFixed(1)}%"></div></div>
+    `;
+    list.appendChild(item);
+  });
+  container.appendChild(list);
+}
+
+function renderDeltaTable(container, rows, currency) {
+  const table = document.createElement("table");
+  table.className = "table";
+  table.innerHTML = "<thead><tr><th>Item</th><th>Delta</th><th>%</th></tr></thead>";
+  const tbody = document.createElement("tbody");
+  rows.forEach((row) => {
+    const pct = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
+    const sign = row.delta >= 0 ? "+" : "";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${row.key}</td><td>${sign}${formatCost(row.delta, currency)}</td><td>${pct}</td>`;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function renderDeltaChart(container, rows, currency) {
+  const maxValue = Math.max(...rows.map((row) => Math.abs(row.delta || 0)), 1);
+  const list = document.createElement("div");
+  list.className = "bar-list";
+  rows.forEach((row) => {
+    const value = row.delta || 0;
+    const pct = Math.min(100, (Math.abs(value) / maxValue) * 100);
+    const sign = value >= 0 ? "+" : "";
+    const ratio = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
+    const item = document.createElement("div");
+    item.className = "bar-row";
+    item.innerHTML = `
+      <div class="bar-meta"><span>${row.key}</span><strong>${sign}${formatCost(value, currency)} (${ratio})</strong></div>
+      <div class="mini-bar-track"><div class="mini-bar-fill ${value < 0 ? "is-negative" : ""}" style="width: ${pct.toFixed(
+        1
+      )}%"></div></div>
+    `;
+    list.appendChild(item);
+  });
+  container.appendChild(list);
 }
 
 function renderFreshness(rows) {
@@ -222,26 +318,68 @@ function renderTimeline(rows, provider, currency = "USD") {
   )}% & ≥${formatCost(ANOMALY_IMPACT_THRESHOLD, currency)}`;
 }
 
-function renderAnomalies(rows) {
+function renderAnomalies(rows, currency = "USD") {
   anomaliesEl.innerHTML = "";
   if (!rows.length) {
-    anomaliesEl.innerHTML = "<li>No anomalies detected</li>";
+    anomaliesEl.innerHTML = "<ul class=\"list-items\"><li>No anomalies detected</li></ul>";
     return;
   }
+  if (rows.length > CHART_THRESHOLD) {
+    const table = document.createElement("table");
+    table.className = "table";
+    table.innerHTML = "<thead><tr><th>Date</th><th>Total</th><th>Delta</th></tr></thead>";
+    const tbody = document.createElement("tbody");
+    rows.forEach((row) => {
+      const pct = row.delta_ratio ? `${(row.delta_ratio * 100).toFixed(1)}%` : "—";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${row.date}</td><td>${formatCost(row.total_cost, currency)}</td><td>${pct}</td>`;
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    anomaliesEl.appendChild(table);
+    return;
+  }
+  const list = document.createElement("ul");
+  list.className = "list-items";
   rows.forEach((row) => {
     const li = document.createElement("li");
     const pct = row.delta_ratio ? `${(row.delta_ratio * 100).toFixed(1)}%` : "—";
-    li.innerHTML = `<span>${row.provider} · ${row.date}</span><strong>${formatCost(row.total_cost)} (${pct})</strong>`;
-    anomaliesEl.appendChild(li);
+    li.innerHTML = `<span>${row.provider} · ${row.date}</span><strong>${formatCost(row.total_cost, currency)} (${pct})</strong>`;
+    list.appendChild(li);
   });
+  anomaliesEl.appendChild(list);
 }
 
-function renderSummarySplit(container, rows, highlightKey = null) {
+function renderSummarySplit(container, rows, highlightKey = null, options = {}) {
+  const { showPie = false } = options;
   container.innerHTML = "";
+  container.classList.remove("has-chart");
   if (!rows.length) {
     container.innerHTML = "<div class=\"summary-chip\"><strong>—</strong><span>No data</span></div>";
     return;
   }
+  if (showPie) {
+    const total = rows.reduce((sum, row) => sum + (row.total_cost || 0), 0);
+    const chart = document.createElement("div");
+    chart.className = "summary-chart";
+    if (total > 0) {
+      let acc = 0;
+      const segments = rows.map((row) => {
+        const value = row.total_cost || 0;
+        const percent = (value / total) * 100;
+        const start = acc;
+        acc += percent;
+        const colorKey = (row.key || row.provider || "").toLowerCase();
+        const color = PROVIDER_COLORS[colorKey] || "#d7c4b8";
+        return `${color} ${start}% ${acc}%`;
+      });
+      chart.style.background = `conic-gradient(${segments.join(", ")})`;
+    }
+    container.classList.add("has-chart");
+    container.appendChild(chart);
+  }
+  const items = document.createElement("div");
+  items.className = "summary-items";
   rows.forEach((row) => {
     const chip = document.createElement("div");
     chip.className = "summary-chip";
@@ -251,8 +389,9 @@ function renderSummarySplit(container, rows, highlightKey = null) {
     if (highlightKey && label === highlightKey) {
       chip.classList.add("is-active");
     }
-    container.appendChild(chip);
+    items.appendChild(chip);
   });
+  container.appendChild(items);
 }
 
 function buildQuery(params) {
@@ -356,23 +495,38 @@ function renderSignals(rows, currencyMap, freshnessMap) {
     signalsListEl.appendChild(card);
   });
 }
-function renderDeltaList(container, rows, currency = "USD", emptyLabel = "No data") {
+function renderDeltaList(container, rows, currency = "USD", emptyLabel = "No data", mode = "auto") {
   container.innerHTML = "";
   if (!Array.isArray(rows)) {
-    container.innerHTML = `<li>${emptyLabel}</li>`;
+    container.innerHTML = `<ul class="list-items"><li>${emptyLabel}</li></ul>`;
     return;
   }
   if (!rows.length) {
-    container.innerHTML = `<li>${emptyLabel}</li>`;
+    container.innerHTML = `<ul class="list-items"><li>${emptyLabel}</li></ul>`;
     return;
   }
+  let resolvedMode = mode;
+  if (resolvedMode === "auto") {
+    resolvedMode = rows.length <= CHART_THRESHOLD ? "chart" : "table";
+  }
+  if (resolvedMode === "table") {
+    renderDeltaTable(container, rows, currency);
+    return;
+  }
+  if (resolvedMode === "chart") {
+    renderDeltaChart(container, rows, currency);
+    return;
+  }
+  const list = document.createElement("ul");
+  list.className = "list-items";
   rows.forEach((row) => {
     const li = document.createElement("li");
     const pct = row.delta_ratio === null ? "—" : `${(row.delta_ratio * 100).toFixed(1)}%`;
     const sign = row.delta >= 0 ? "+" : "";
     li.innerHTML = `<span>${row.key}</span><strong>${sign}${formatCost(row.delta, currency)} (${pct})</strong>`;
-    container.appendChild(li);
+    list.appendChild(li);
   });
+  container.appendChild(list);
 }
 
 function formatDelta(current, previous, currency = "USD") {
@@ -528,18 +682,19 @@ async function refreshData() {
     todayTotalEl.textContent = formatCost(todayTotal.total_cost);
     weekTotalEl.textContent = formatCost(weekTotal.total_cost);
     monthTotalEl.textContent = formatCost(monthTotal.total_cost);
-    renderSummarySplit(todaySplitEl, todayByProvider);
-    renderSummarySplit(weekSplitEl, weekByProvider);
-    renderSummarySplit(monthSplitEl, monthByProvider);
+    renderSummarySplit(todaySplitEl, todayByProvider, null, { showPie: true });
+    renderSummarySplit(weekSplitEl, weekByProvider, null, { showPie: true });
+    renderSummarySplit(monthSplitEl, monthByProvider, null, { showPie: true });
 
-    const emptyLabel = filterState.search ? "No results" : "No data";
-    renderSummarySplit(providerSummaryEl, providerTotalsRange, filterState.provider);
-    renderList(topServicesEl, topServices, emptyLabel);
-    renderList(topAccountsEl, topAccounts, emptyLabel);
     const currencyMap = providerTotalsRange.reduce((acc, row) => {
       acc[row.provider] = row.currency || "USD";
       return acc;
     }, {});
+    const activeCurrency = currencyMap[filterState.provider] || "USD";
+    const emptyLabel = filterState.search ? "No results" : "No data";
+    renderSummarySplit(providerSummaryEl, providerTotalsRange, filterState.provider);
+    renderList(topServicesEl, topServices, { emptyLabel, mode: "chart", currency: activeCurrency });
+    renderList(topAccountsEl, topAccounts, { emptyLabel, mode: "chart", currency: activeCurrency });
     const freshnessMap = freshness.reduce((acc, row) => {
       if (row.provider && row.last_entry_date) {
         acc[row.provider] = row.last_entry_date;
@@ -559,19 +714,26 @@ async function refreshData() {
     renderSparkline(trendPoints);
 
     const breakdown = breakdowns[0];
-    renderList(breakdownServicesEl, breakdown ? breakdown.services : [], emptyLabel);
-    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : [], emptyLabel);
+    renderList(breakdownServicesEl, breakdown ? breakdown.services : [], {
+      emptyLabel,
+      mode: "table",
+      currency: activeCurrency,
+    });
+    renderList(breakdownAccountsEl, breakdown ? breakdown.accounts : [], {
+      emptyLabel,
+      mode: "table",
+      currency: activeCurrency,
+    });
     updatePagerButtons(breakdown);
-    const activeCurrency = currencyMap[filterState.provider] || "USD";
     const activeWeekTotal = getProviderTotal(weekByProvider, filterState.provider);
     const activeMonthTotal = getProviderTotal(monthByProvider, filterState.provider);
     const activePrevWeekTotal = getProviderTotal(prevWeekByProvider, filterState.provider);
     const activePrevMonthTotal = getProviderTotal(prevMonthByProvider, filterState.provider);
     wowDeltaEl.textContent = formatDelta(activeWeekTotal, activePrevWeekTotal, activeCurrency);
     momDeltaEl.textContent = formatDelta(activeMonthTotal, activePrevMonthTotal, activeCurrency);
-    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency, emptyLabel);
-    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency, emptyLabel);
-    renderAnomalies(anomalies);
+    renderDeltaList(topServiceDeltasEl, serviceDeltas, activeCurrency, emptyLabel, "chart");
+    renderDeltaList(topAccountDeltasEl, accountDeltas, activeCurrency, emptyLabel, "chart");
+    renderAnomalies(anomalies, activeCurrency);
     renderTimeline(timelineRows, filterState.provider, activeCurrency);
     renderFreshness(freshness);
     servicePageEl.textContent = `Page ${servicePageIndex + 1}`;
