@@ -39,7 +39,12 @@ def _get_token(session: requests.Session, tenant_id: str, client_id: str, client
     return payload["access_token"]
 
 
-def _iter_rows(session: requests.Session, payload: Dict[str, Any]) -> Iterable[tuple[list[str], List[Any]]]:
+def _iter_rows(
+    session: requests.Session,
+    payload: Dict[str, Any],
+    headers: Dict[str, str],
+    body: Dict[str, Any],
+) -> Iterable[tuple[list[str], List[Any]]]:
     properties = payload.get("properties", {})
     columns = [col["name"] for col in properties.get("columns", [])]
     rows = properties.get("rows", [])
@@ -47,7 +52,7 @@ def _iter_rows(session: requests.Session, payload: Dict[str, Any]) -> Iterable[t
         yield columns, row
     next_link = properties.get("nextLink")
     while next_link:
-        response = session.post(next_link, timeout=20)
+        response = session.post(next_link, headers=headers, json=body, timeout=20)
         response.raise_for_status()
         payload = response.json()
         properties = payload.get("properties", {})
@@ -137,7 +142,7 @@ def _collect_from_api() -> List[Dict[str, Any]]:
         response = session.post(url, headers=headers, json=body, timeout=30)
         response.raise_for_status()
         payload = response.json()
-        rows = _iter_rows(session, payload)
+        rows = _iter_rows(session, payload, headers, body)
         all_entries.extend(_parse_rows(rows, subscription_id, account_name))
     return all_entries
 
