@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from api.routers import costs, exports, tags
 
-app = FastAPI(title="Unified Cloud Cost Center")
+app = FastAPI(title="Unified Cost Center")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

@@ -118,3 +118,4 @@ class DataFreshnessResponse(BaseModel):
     last_entry_date: Optional[date] = None
     last_ingested_at: Optional[str] = None
     lookback_days: Optional[int] = None
+    fx_last_updated: Optional[date] = None

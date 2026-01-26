@@ -212,13 +212,15 @@ function renderFreshness(rows) {
     freshnessEl.innerHTML = "<div class=\"freshness-item\"><strong>—</strong><span>No data yet</span></div>";
     return;
   }
+  const fxUpdated = rows.find((row) => row.fx_last_updated)?.fx_last_updated || null;
   rows.forEach((row) => {
     const card = document.createElement("div");
     card.className = "freshness-item";
     const date = row.last_entry_date ? formatShortDate(row.last_entry_date) : "—";
     const ingested = row.last_ingested_at ? formatDateTime(row.last_ingested_at) : "—";
     const lookback = row.lookback_days ? `Rolling window: ${row.lookback_days} days` : "Rolling window: unknown";
-    card.innerHTML = `<strong>${row.provider}</strong><span>Latest cost day: ${date}</span><span>Last ingested: ${ingested}</span><em>${lookback}</em>`;
+    const fxNote = fxUpdated ? `FX updated: ${formatShortDate(fxUpdated)}` : "FX updated: —";
+    card.innerHTML = `<strong>${row.provider}</strong><span>Latest cost day: ${date}</span><span>Last ingested: ${ingested}</span><em>${lookback}</em><em>${fxNote}</em>`;
     freshnessEl.appendChild(card);
   });
 }
@@ -686,11 +688,7 @@ async function refreshData() {
     renderSummarySplit(weekSplitEl, weekByProvider, null, { showPie: true });
     renderSummarySplit(monthSplitEl, monthByProvider, null, { showPie: true });
 
-    const currencyMap = providerTotalsRange.reduce((acc, row) => {
-      acc[row.provider] = row.currency || "USD";
-      return acc;
-    }, {});
-    const activeCurrency = currencyMap[filterState.provider] || "USD";
+    const activeCurrency = "USD";
     const emptyLabel = filterState.search ? "No results" : "No data";
     renderSummarySplit(providerSummaryEl, providerTotalsRange, filterState.provider);
     renderList(topServicesEl, topServices, { emptyLabel, mode: "chart", currency: activeCurrency });
@@ -701,6 +699,11 @@ async function refreshData() {
       }
       return acc;
     }, {});
+    const currencyMap = {
+      aws: "USD",
+      azure: "USD",
+      gcp: "USD",
+    };
     renderSignals(signals, currencyMap, freshnessMap);
 
     const trendTotals = {};

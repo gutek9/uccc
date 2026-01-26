@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unified Cost Center</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="app">
+      <div id="errorBanner" class="error-banner is-hidden"></div>
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Unified Cost Center</p>
+          <h1>One pane of glass for cloud spend.</h1>
+          <p class="subtitle">
+            Daily costs across AWS, GCP, and Azure. Fast signals for owners, anomalies, and tag hygiene.
+          </p>
+        </div>
+      </header>
+
+      <div class="sticky-shell">
+        <nav class="menu compact" aria-label="Dashboard sections">
+          <a class="menu-card" href="#overview">
+            <span class="menu-title">Overview</span>
+          </a>
+          <a class="menu-card" href="#signals">
+            <span class="menu-title">Signals</span>
+          </a>
+          <a class="menu-card" href="#drivers">
+            <span class="menu-title">Cost Drivers</span>
+          </a>
+          <a class="menu-card" href="#momentum">
+            <span class="menu-title">Momentum</span>
+          </a>
+        </nav>
+
+        <section class="filter-bar sticky-controls">
+          <div class="filter-group">
+            <div class="tab-group">
+              <button class="tab-btn is-active" data-provider="aws">AWS</button>
+              <button class="tab-btn" data-provider="azure">Azure</button>
+            </div>
+            <div class="search-field">
+              <input type="search" id="searchInput" placeholder="Search service or account" />
+              <span class="search-scope">Scope: service + account</span>
+            </div>
+          </div>
+          <div class="time-controls">
+            <label>
+              From
+              <input type="date" id="fromDate" />
+            </label>
+            <label>
+              To
+              <input type="date" id="toDate" />
+            </label>
+            <button id="refreshBtn">Refresh</button>
+          </div>
+        </section>
+      </div>
+
+      <section id="overview" class="page-section">
+        <div class="section-header">
+          <h2>Overview</h2>
+          <p class="caption">Top-level spend posture, trend, and data freshness.</p>
+        </div>
+        <section class="summary">
+          <div class="card highlight">
+            <h2>Today</h2>
+            <p class="metric" id="todayTotal">—</p>
+            <span class="caption">Total cost</span>
+            <div class="summary-split" id="todaySplit"></div>
+          </div>
+          <div class="card">
+            <h2>Last 7 days</h2>
+            <p class="metric" id="weekTotal">—</p>
+            <span class="caption">Rolling spend</span>
+            <div class="summary-split" id="weekSplit"></div>
+          </div>
+          <div class="card">
+            <h2>This month</h2>
+            <p class="metric" id="monthTotal">—</p>
+            <span class="caption">Month-to-date</span>
+            <div class="summary-split" id="monthSplit"></div>
+          </div>
+        </section>
+        <section class="grid insights global-insights">
+          <div class="panel span-full">
+            <h3>Cost Trend (30 days)</h3>
+            <div class="sparkline-wrap">
+              <svg id="costSparkline" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+            </div>
+            <p class="caption">Total daily cost across providers.</p>
+          </div>
+        </section>
+        <section class="panel freshness-panel">
+          <div class="freshness-header">
+            <h3>Data Freshness</h3>
+            <p class="caption">Latest cost day and ingestion time per provider.</p>
+          </div>
+          <div id="freshnessList" class="freshness-list"></div>
+        </section>
+      </section>
+
+      <section id="signals" class="page-section">
+        <div class="section-header">
+          <h2>Signals</h2>
+          <p class="caption">Critical signals with timing context for the selected provider.</p>
+        </div>
+        <section class="panel signals-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Critical Signals</h3>
+              <p class="caption">Largest cost spikes for the selected provider and range.</p>
+            </div>
+          </div>
+          <div id="signalsList" class="signals-list"></div>
+        </section>
+        <section class="grid insights signals-insights">
+          <div class="panel timeline-panel">
+            <h3>Anomaly Timeline (14 days)</h3>
+            <div id="timelineHeatmap" class="timeline-heatmap"></div>
+            <p id="timelineMeta" class="caption">Baseline: —</p>
+          </div>
+          <div class="panel">
+            <h3>Anomalies</h3>
+            <div id="anomalies" class="list"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="drivers" class="page-section">
+        <div class="section-header">
+          <h2>Cost Drivers</h2>
+          <p class="caption">Service and account leaders for the selected provider.</p>
+        </div>
+        <section class="panel breakdowns-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Breakdowns</h3>
+              <p class="caption">Services and accounts, filtered by provider.</p>
+            </div>
+          </div>
+          <div id="providerSummary" class="summary-split"></div>
+          <div class="breakdown-columns">
+            <div>
+              <div class="panel-header small">
+                <h4>Top Services</h4>
+                <div class="pager">
+                  <button class="pager-btn" data-svc="prev">Prev</button>
+                  <span id="servicePage">Page 1</span>
+                  <button class="pager-btn" data-svc="next">Next</button>
+                </div>
+              </div>
+              <div id="breakdownServices" class="list"></div>
+            </div>
+            <div>
+              <div class="panel-header small">
+                <h4>Top Accounts</h4>
+                <div class="pager">
+                  <button class="pager-btn" data-acct="prev">Prev</button>
+                  <span id="accountPage">Page 1</span>
+                  <button class="pager-btn" data-acct="next">Next</button>
+                </div>
+              </div>
+              <div id="breakdownAccounts" class="list"></div>
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <h3>Top Cost Drivers</h3>
+          <div class="provider-group">
+            <h4>Services</h4>
+            <div id="topServices" class="list"></div>
+          </div>
+          <div class="provider-group">
+            <h4>Accounts</h4>
+            <div id="topAccounts" class="list"></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="momentum" class="page-section">
+        <div class="section-header">
+          <h2>Momentum</h2>
+          <p class="caption">Direction and change vs prior periods.</p>
+        </div>
+        <section class="grid insights momentum-insights">
+          <div class="panel">
+            <h3>Momentum</h3>
+            <div class="metric-row">
+              <span>Week over week</span>
+              <strong id="wowDelta">—</strong>
+            </div>
+            <div class="metric-row">
+              <span>Month over month</span>
+              <strong id="momDelta">—</strong>
+            </div>
+            <p class="caption">Shows change vs prior period for the selected provider (last 7 days vs previous 7, month-to-date vs prior month).</p>
+          </div>
+          <div class="panel">
+            <h3>Top Movers</h3>
+            <div class="provider-group">
+              <h4>Services</h4>
+              <div id="topServiceDeltas" class="list"></div>
+            </div>
+            <div class="provider-group">
+              <h4>Accounts</h4>
+              <div id="topAccountDeltas" class="list"></div>
+            </div>
+            <p class="caption">Compares the selected range to the previous period.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
