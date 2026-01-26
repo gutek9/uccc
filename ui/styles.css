@@ -604,6 +604,111 @@ body {
   box-shadow: 0 8px 22px var(--shadow);
 }
 
+.ai-upload {
+  display: grid;
+  gap: 14px;
+}
+
+.drop-zone {
+  border: 1px dashed #3a3131;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(23, 19, 19, 0.9), rgba(30, 24, 24, 0.85));
+  padding: 26px;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.drop-zone input {
+  display: none;
+}
+
+.drop-zone-content {
+  display: grid;
+  gap: 6px;
+}
+
+.drop-zone .drop-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8ede6;
+}
+
+.drop-zone.is-dragover {
+  border-color: rgba(227, 81, 55, 0.6);
+  background: radial-gradient(circle at top right, rgba(227, 81, 55, 0.18), transparent 60%),
+    linear-gradient(135deg, rgba(23, 19, 19, 0.9), rgba(30, 24, 24, 0.85));
+  transform: translateY(-2px);
+}
+
+.upload-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ai-error {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(227, 81, 55, 0.4);
+  background: rgba(227, 81, 55, 0.12);
+  color: #f6d7d1;
+  font-size: 0.9rem;
+}
+
+.ai-error.is-hidden {
+  display: none;
+}
+
+.ai-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.ai-results.is-hidden {
+  display: none;
+}
+
+.ai-subpanel {
+  background: var(--panel-soft);
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.ai-file-meta {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ai-trend-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.ai-json {
+  background: #151212;
+  border: 1px solid #2e2727;
+  border-radius: 14px;
+  padding: 16px;
+  color: #f6f0ea;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
 .freshness-panel {
   display: grid;
   gap: 16px;

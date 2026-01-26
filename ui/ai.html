@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Unified Cost Center · AI Costs</title>
+    <title>Unified Cost Center - AI Costs</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -18,9 +18,93 @@
       </header>
 
       <section class="panel">
-        <h3>AI Spend Overview</h3>
-        <p class="caption">This page will focus on AI-related services and usage once wired to data.</p>
+        <div class="panel-header">
+          <div>
+            <h3>AI Survey Intake</h3>
+            <p class="caption">
+              Temporary CSV import to estimate AI tool cost and time savings from the internal survey.
+            </p>
+          </div>
+        </div>
+        <div class="ai-upload">
+          <label class="drop-zone" id="aiDropZone">
+            <input id="aiCsvInput" type="file" accept=".csv,text/csv" />
+            <div class="drop-zone-content">
+              <p class="drop-title">Drop CSV here</p>
+              <p class="caption">or click to browse</p>
+            </div>
+          </label>
+          <div class="upload-hints">
+            <span>Required: tools used, usage frequency, time saved per week</span>
+            <span>Optional: productivity rating, feedback</span>
+          </div>
+          <div class="ai-error is-hidden" id="aiError"></div>
+        </div>
+      </section>
+
+      <section class="panel ai-results is-hidden" id="aiResults">
+        <div class="panel-header">
+          <div>
+            <h3>AI Impact Snapshot</h3>
+            <p class="caption" id="aiSummaryMeta">Awaiting upload.</p>
+          </div>
+          <div class="ai-file-meta" id="aiFileMeta">No file loaded</div>
+        </div>
+        <div class="summary">
+          <div class="card highlight">
+            <p class="label">Monthly AI spend</p>
+            <div class="metric" id="aiTotalSpend">$0</div>
+            <p class="caption" id="aiUnknownTools">Unknown tools: 0</p>
+          </div>
+          <div class="card">
+            <p class="label">Monthly value</p>
+            <div class="metric" id="aiTotalValue">$0</div>
+            <p class="caption" id="aiNetImpact">Net impact: $0</p>
+          </div>
+          <div class="card">
+            <p class="label">Monthly hours saved</p>
+            <div class="metric" id="aiHoursSaved">0</div>
+            <p class="caption" id="aiSurveySize">0 respondents</p>
+          </div>
+        </div>
+        <div class="ai-results-grid">
+          <div class="ai-subpanel">
+            <div class="panel-header small">
+              <h4>Spend by tool</h4>
+              <p class="caption">Monthly license cost</p>
+            </div>
+            <div id="aiCostByTool"></div>
+          </div>
+          <div class="ai-subpanel">
+            <div class="panel-header small">
+              <h4>Hours saved by frequency</h4>
+              <p class="caption">Monthly hours saved</p>
+            </div>
+            <div id="aiHoursByFrequency"></div>
+          </div>
+          <div class="ai-subpanel">
+            <div class="panel-header small">
+              <h4>Top tools by ROI</h4>
+            </div>
+            <div id="aiTopRoi"></div>
+          </div>
+        </div>
+        <div class="ai-results-grid">
+          <div class="ai-subpanel span-full">
+            <div class="panel-header small">
+              <h4>Assumptions and notes</h4>
+            </div>
+            <div id="aiAssumptions"></div>
+          </div>
+          <div class="ai-subpanel span-full">
+            <div class="panel-header small">
+              <h4>Structured output</h4>
+            </div>
+            <pre class="ai-json" id="aiOutput"></pre>
+          </div>
+        </div>
       </section>
     </main>
+    <script src="ai.js"></script>
   </body>
 </html>
