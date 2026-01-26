@@ -15,37 +15,36 @@ const hoursByFrequencyEl = document.getElementById("aiHoursByFrequency");
 const topRoiEl = document.getElementById("aiTopRoi");
 const assumptionsEl = document.getElementById("aiAssumptions");
 const outputEl = document.getElementById("aiOutput");
+const weeksPerMonthInput = document.getElementById("aiWeeksPerMonth");
+const costPerHourInput = document.getElementById("aiCostPerHour");
+const toolCostsListEl = document.getElementById("aiToolCosts");
+const timeSavedListEl = document.getElementById("aiTimeSavedMap");
+const addToolBtn = document.getElementById("aiAddTool");
+const addTimeBtn = document.getElementById("aiAddTimeMap");
 
 const MAX_ROWS = 50000;
-const WEEKS_PER_MONTH = 4.33;
-
-const TOOL_COSTS = {
-  "Cursor": { monthly_cost_usd: 20 },
-  "Claude Code (Anthropic)": { monthly_cost_usd: 30 },
-  "GitHub Copilot": { monthly_cost_usd: 19 },
-  "ChatGPT Plus": { monthly_cost_usd: 20 },
-  "Antigravity": { monthly_cost_usd: 0 },
+const DEFAULT_CONFIG = {
+  weeksPerMonth: 4.33,
+  avgEngineerCostPerHour: 80,
+  toolCosts: [
+    { name: "Cursor", monthly_cost_usd: 20 },
+    { name: "Claude Code (Anthropic)", monthly_cost_usd: 30 },
+    { name: "GitHub Copilot", monthly_cost_usd: 19 },
+    { name: "ChatGPT Plus", monthly_cost_usd: 20 },
+    { name: "Antigravity", monthly_cost_usd: 0 },
+  ],
+  timeSavedMap: [
+    { label: "Less than 1 hour", hours: 0.5 },
+    { label: "0 - 1 hour", hours: 0.5 },
+    { label: "1 - 3 hours", hours: 2 },
+    { label: "3 - 5 hours", hours: 4 },
+    { label: "More than 5 hours", hours: 6 },
+    { label: "I do not feel they save me time", hours: 0 },
+  ],
 };
 
-const TIME_SAVED_MAP = {
-  "less than 1 hour": 0.5,
-  "<1 hour": 0.5,
-  "0-1 hour": 0.5,
-  "1-2 hour": 1.5,
-  "1 to 2 hour": 1.5,
-  "1-2 hr": 1.5,
-  "1-3 hour": 2,
-  "3-5 hour": 4,
-  "3 to 5 hour": 4,
-  "3-5 hr": 4,
-  "more than 5 hour": 6,
-  ">5 hour": 6,
-  "5+ hour": 6,
-  "i do not feel they save me time": 0,
-  "no time saved": 0,
-};
-
-const AVG_ENGINEER_COST_PER_HOUR = 80;
+let lastParsedData = null;
+let lastFilename = "";
 
 function formatCost(value, currency = "USD") {
   const formatter = new Intl.NumberFormat(undefined, {
@@ -136,6 +135,10 @@ function findColumn(headers, candidates) {
   return -1;
 }
 
+function normalizeToolKey(value) {
+  return normalizeHeader(value);
+}
+
 function normalizeToolName(value) {
   return String(value || "").trim();
 }
@@ -144,14 +147,13 @@ function normalizeFrequency(value) {
   return String(value || "").trim();
 }
 
-function mapTimeSaved(value) {
+function mapTimeSaved(value, timeSavedMap) {
   if (!value) {
     return { hours: 0, mapped: false };
   }
   const normalized = normalizeTimeSaved(value);
-  const direct = TIME_SAVED_MAP[normalized];
-  if (Number.isFinite(direct)) {
-    return { hours: direct, mapped: true };
+  if (timeSavedMap.has(normalized)) {
+    return { hours: timeSavedMap.get(normalized), mapped: true };
   }
   return { hours: 0, mapped: false };
 }
@@ -225,6 +227,112 @@ function renderAssumptions(container, data) {
   container.appendChild(list);
 }
 
+function createConfigRow({ labelValue = "", numberValue = "", numberStep = "1", onChange }) {
+  const row = document.createElement("div");
+  row.className = "ai-config-row";
+
+  const labelInput = document.createElement("input");
+  labelInput.type = "text";
+  labelInput.value = labelValue;
+  labelInput.placeholder = "Label";
+
+  const numberInput = document.createElement("input");
+  numberInput.type = "number";
+  numberInput.min = "0";
+  numberInput.step = numberStep;
+  numberInput.value = numberValue;
+  numberInput.placeholder = "Value";
+
+  const removeBtn = document.createElement("button");
+  removeBtn.type = "button";
+  removeBtn.className = "ai-remove-btn";
+  removeBtn.textContent = "Remove";
+
+  const handleInput = () => {
+    if (typeof onChange === "function") {
+      onChange();
+    }
+  };
+
+  labelInput.addEventListener("input", handleInput);
+  numberInput.addEventListener("input", handleInput);
+  removeBtn.addEventListener("click", () => {
+    row.remove();
+    handleInput();
+  });
+
+  row.appendChild(labelInput);
+  row.appendChild(numberInput);
+  row.appendChild(removeBtn);
+  return row;
+}
+
+function getConfigFromUI() {
+  const weeksPerMonth = parseFloat(weeksPerMonthInput.value) || DEFAULT_CONFIG.weeksPerMonth;
+  const avgEngineerCostPerHour =
+    parseFloat(costPerHourInput.value) || DEFAULT_CONFIG.avgEngineerCostPerHour;
+
+  const toolCosts = Array.from(toolCostsListEl.querySelectorAll(".ai-config-row")).map((row) => {
+    const inputs = row.querySelectorAll("input");
+    return {
+      name: inputs[0].value.trim(),
+      monthly_cost_usd: parseFloat(inputs[1].value) || 0,
+    };
+  });
+
+  const timeSavedMap = Array.from(timeSavedListEl.querySelectorAll(".ai-config-row")).map(
+    (row) => {
+      const inputs = row.querySelectorAll("input");
+      return {
+        label: inputs[0].value.trim(),
+        hours: parseFloat(inputs[1].value) || 0,
+      };
+    }
+  );
+
+  return {
+    weeksPerMonth,
+    avgEngineerCostPerHour,
+    toolCosts: toolCosts.filter((entry) => entry.name),
+    timeSavedMap: timeSavedMap.filter((entry) => entry.label),
+  };
+}
+
+function applyDefaultConfig() {
+  weeksPerMonthInput.value = DEFAULT_CONFIG.weeksPerMonth;
+  costPerHourInput.value = DEFAULT_CONFIG.avgEngineerCostPerHour;
+  toolCostsListEl.innerHTML = "";
+  timeSavedListEl.innerHTML = "";
+
+  DEFAULT_CONFIG.toolCosts.forEach((tool) => {
+    toolCostsListEl.appendChild(
+      createConfigRow({
+        labelValue: tool.name,
+        numberValue: tool.monthly_cost_usd,
+        numberStep: "1",
+        onChange: handleConfigChange,
+      })
+    );
+  });
+
+  DEFAULT_CONFIG.timeSavedMap.forEach((entry) => {
+    timeSavedListEl.appendChild(
+      createConfigRow({
+        labelValue: entry.label,
+        numberValue: entry.hours,
+        numberStep: "0.1",
+        onChange: handleConfigChange,
+      })
+    );
+  });
+}
+
+function handleConfigChange() {
+  if (lastParsedData) {
+    summarizeSurvey(lastParsedData, lastFilename, getConfigFromUI());
+  }
+}
+
 function updateError(message) {
   if (!message) {
     errorEl.classList.add("is-hidden");
@@ -235,7 +343,27 @@ function updateError(message) {
   errorEl.classList.remove("is-hidden");
 }
 
-function summarizeSurvey(data, filename) {
+function summarizeSurvey(data, filename, config) {
+  const resolvedConfig = config || getConfigFromUI();
+  const weeksPerMonth = resolvedConfig.weeksPerMonth;
+  const avgEngineerCostPerHour = resolvedConfig.avgEngineerCostPerHour;
+  const toolCostMap = new Map();
+  const timeSavedLookup = new Map();
+
+  resolvedConfig.toolCosts.forEach((tool) => {
+    if (!tool.name) {
+      return;
+    }
+    toolCostMap.set(normalizeToolKey(tool.name), tool.monthly_cost_usd || 0);
+  });
+
+  resolvedConfig.timeSavedMap.forEach((entry) => {
+    if (!entry.label) {
+      return;
+    }
+    timeSavedLookup.set(normalizeTimeSaved(entry.label), entry.hours || 0);
+  });
+
   const headers = data[0] || [];
   const rows = data.slice(1, MAX_ROWS + 1);
 
@@ -291,7 +419,7 @@ function summarizeSurvey(data, filename) {
     const toolsCell = row[toolsIndex] || "";
     const frequency = normalizeFrequency(row[frequencyIndex]);
     const timeSavedRaw = row[timeSavedIndex];
-    const timeSavedResult = mapTimeSaved(timeSavedRaw);
+    const timeSavedResult = mapTimeSaved(timeSavedRaw, timeSavedLookup);
     const weeklySaved = timeSavedResult.hours;
     if (!timeSavedRaw) {
       missingTimeSaved += 1;
@@ -301,7 +429,7 @@ function summarizeSurvey(data, filename) {
     const tools = toolsCell
       .split(";")
       .flatMap((entry) => entry.split(","))
-      .map((tool) => normalizeToolAlias(tool))
+      .map((tool) => normalizeToolName(tool))
       .filter((tool) => tool.length);
 
     respondentCount += 1;
@@ -325,9 +453,11 @@ function summarizeSurvey(data, filename) {
     toolsCounted += toolList.length;
 
     toolList.forEach((tool) => {
-      const costConfig = TOOL_COSTS[tool];
-      const monthlyCost = costConfig ? costConfig.monthly_cost_usd : 0;
-      if (!costConfig) {
+      const normalizedTool = normalizeToolKey(tool);
+      const aliasedTool = normalizeToolKey(normalizeToolAlias(tool));
+      const hasCost = toolCostMap.has(normalizedTool) || toolCostMap.has(aliasedTool);
+      const monthlyCost = toolCostMap.get(normalizedTool) || toolCostMap.get(aliasedTool) || 0;
+      if (!hasCost) {
         unknownTools.add(tool);
       }
       totalsByToolCost.set(tool, (totalsByToolCost.get(tool) || 0) + monthlyCost);
@@ -335,7 +465,7 @@ function summarizeSurvey(data, filename) {
     });
 
     if (weeklySaved > 0) {
-      const monthlyValue = weeklySaved * WEEKS_PER_MONTH * AVG_ENGINEER_COST_PER_HOUR;
+      const monthlyValue = weeklySaved * weeksPerMonth * avgEngineerCostPerHour;
       const perToolValue = toolList.length ? monthlyValue / toolList.length : 0;
       toolList.forEach((tool) => {
         totalsByToolValue.set(tool, (totalsByToolValue.get(tool) || 0) + perToolValue);
@@ -343,8 +473,8 @@ function summarizeSurvey(data, filename) {
     }
   });
 
-  const monthlyHoursSaved = totalHoursWeekly * WEEKS_PER_MONTH;
-  const totalValue = monthlyHoursSaved * AVG_ENGINEER_COST_PER_HOUR;
+  const monthlyHoursSaved = totalHoursWeekly * weeksPerMonth;
+  const totalValue = monthlyHoursSaved * avgEngineerCostPerHour;
   const netImpact = totalValue - totalCost;
 
   const toolCostRows = Array.from(totalsByToolCost.entries())
@@ -406,11 +536,11 @@ function summarizeSurvey(data, filename) {
   }
 
   const assumptionLines = [
-    `Weeks per month: ${WEEKS_PER_MONTH}`,
-    `Average engineer cost per hour: ${formatCost(AVG_ENGINEER_COST_PER_HOUR, "USD")}`,
-    `Tool costs: ${Object.keys(TOOL_COSTS).length} configured`,
+    `Weeks per month: ${weeksPerMonth}`,
+    `Average engineer cost per hour: ${formatCost(avgEngineerCostPerHour, "USD")}`,
+    `Tool costs: ${resolvedConfig.toolCosts.length} configured`,
     `Unknown tool costs treated as USD 0`,
-    `Weekly time saved uses conservative midpoints`,
+    `Weekly time saved uses configured midpoints`,
     `Monthly value allocated equally across tools used by each engineer`,
     `Results are directional estimates, not accounting-grade`,
   ];
@@ -460,10 +590,10 @@ function summarizeSurvey(data, filename) {
       })),
     },
     assumptions: {
-      weeks_per_month: WEEKS_PER_MONTH,
-      average_engineer_cost_per_hour_usd: AVG_ENGINEER_COST_PER_HOUR,
-      time_saved_mapping_hours_per_week: TIME_SAVED_MAP,
-      tool_costs_usd: TOOL_COSTS,
+      weeks_per_month: weeksPerMonth,
+      average_engineer_cost_per_hour_usd: avgEngineerCostPerHour,
+      time_saved_mapping_hours_per_week: resolvedConfig.timeSavedMap,
+      tool_costs_usd: resolvedConfig.toolCosts,
       unknown_tools: Array.from(unknownTools),
       notes: [
         "Unknown tools default to USD 0 monthly cost.",
@@ -493,7 +623,9 @@ function handleFile(file) {
       updateError("CSV appears to be empty.");
       return;
     }
-    summarizeSurvey(parsed, file.name);
+    lastParsedData = parsed;
+    lastFilename = file.name;
+    summarizeSurvey(parsed, file.name, getConfigFromUI());
   };
   reader.onerror = () => {
     updateError("Failed to read file. Please try again.");
@@ -526,3 +658,41 @@ if (fileInput) {
     event.target.value = "";
   });
 }
+
+function initConfigPanel() {
+  if (!weeksPerMonthInput || !costPerHourInput) {
+    return;
+  }
+  applyDefaultConfig();
+
+  weeksPerMonthInput.addEventListener("input", handleConfigChange);
+  costPerHourInput.addEventListener("input", handleConfigChange);
+
+  if (addToolBtn) {
+    addToolBtn.addEventListener("click", () => {
+      toolCostsListEl.appendChild(
+        createConfigRow({
+          labelValue: "",
+          numberValue: "",
+          numberStep: "1",
+          onChange: handleConfigChange,
+        })
+      );
+    });
+  }
+
+  if (addTimeBtn) {
+    addTimeBtn.addEventListener("click", () => {
+      timeSavedListEl.appendChild(
+        createConfigRow({
+          labelValue: "",
+          numberValue: "",
+          numberStep: "0.1",
+          onChange: handleConfigChange,
+        })
+      );
+    });
+  }
+}
+
+initConfigPanel();
