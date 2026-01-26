@@ -1,7 +1,7 @@
 # AGENT.md
 
 ## Project Overview
-Unified Cloud Cost Center (UCCC) aggregates AWS + Azure costs into a single schema, API, and UI. It is an operational cost dashboard (not a system of record).
+Unified Cost Center (UCC) aggregates AWS + Azure costs into a single schema, API, and UI. It is an operational cost dashboard (not a system of record).
 
 ## Stack
 - API: FastAPI + SQLAlchemy

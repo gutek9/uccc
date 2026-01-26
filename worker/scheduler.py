@@ -6,10 +6,11 @@ from typing import List
 import requests
 from sqlalchemy.orm import Session
 
-from api.crud import get_daily_totals
+from api.crud import get_daily_totals, upsert_fx_rates
 from api.db import SessionLocal
 from collectors.run_all import run_collectors
 from core.anomaly import compute_day_over_day
+from core.fx_rates import fetch_ecb_rates
 
 
 def send_slack_notification(webhook_url: str, anomalies: List[dict]):
@@ -46,6 +47,17 @@ def check_anomalies(session: Session, threshold: float):
 
 
 def run_once():
+    session = SessionLocal()
+    try:
+        lookback_days = int(os.getenv("LOOKBACK_DAYS", "90"))
+        try:
+            rates = fetch_ecb_rates(lookback_days)
+            if rates:
+                upsert_fx_rates(session, rates)
+        except Exception as exc:
+            print(f"[fx] failed to sync rates: {exc}")
+    finally:
+        session.close()
     run_collectors()
     webhook = os.getenv("SLACK_WEBHOOK_URL")
     threshold = float(os.getenv("ANOMALY_THRESHOLD", "0.3"))

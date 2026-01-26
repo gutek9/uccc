@@ -40,7 +40,7 @@ def total_cost(
 ):
     start, end = parse_date_range(from_date, to_date)
     total = crud.get_total_cost(session, start, end)
-    return TotalCostResponse(total_cost=total)
+    return TotalCostResponse(total_cost=total, currency="USD")
 
 
 @router.get("/costs/by-provider", response_model=List[GroupedCostResponse])
@@ -64,14 +64,14 @@ def provider_totals(
     rows = crud.get_provider_totals_with_currency(session, start, end)
     totals: list[ProviderTotalResponse] = []
     seen = set()
-    for provider, currency, total in rows:
+    for provider, total in rows:
         if provider in seen:
             continue
         totals.append(
             ProviderTotalResponse(
                 provider=provider,
                 total_cost=total or 0.0,
-                currency=currency or "USD",
+                currency="USD",
             )
         )
         seen.add(provider)
@@ -153,10 +153,10 @@ def by_tag(
     start, end = parse_date_range(from_date, to_date)
     tag_expr = build_tag_expr(session, tag)
     stmt = (
-        select(tag_expr, func.sum(CostEntry.cost))
+        select(tag_expr, func.sum(crud.usd_cost_expr()))
         .where(CostEntry.date.between(start, end))
         .group_by(tag_expr)
-        .order_by(func.sum(CostEntry.cost).desc())
+        .order_by(func.sum(crud.usd_cost_expr()).desc())
     )
     rows = session.execute(stmt).all()
     return [GroupedCostResponse(key=row[0] or "(missing)", total_cost=row[1]) for row in rows]
@@ -330,6 +330,7 @@ def deltas_by_account(
 @router.get("/costs/freshness", response_model=List[DataFreshnessResponse])
 def freshness(session: Session = Depends(get_session)):
     rows = crud.get_freshness(session)
+    fx_last_updated = crud.get_fx_last_updated(session)
     lookback_days = int(os.getenv("LOOKBACK_DAYS", "7"))
     response: list[DataFreshnessResponse] = []
     for provider, last_date, last_ingested in rows:
@@ -339,6 +340,7 @@ def freshness(session: Session = Depends(get_session)):
                 last_entry_date=last_date,
                 last_ingested_at=last_ingested.isoformat() if last_ingested else None,
                 lookback_days=lookback_days,
+                fx_last_updated=fx_last_updated,
             )
         )
     return response

@@ -10,7 +10,7 @@ from api.services.tag_hygiene import build_tag_hygiene_by_provider
 def build_snapshot(session: Session, start: date, end: date):
     total = crud.get_total_cost(session, start, end)
     provider_totals = [
-        ProviderTotalResponse(provider=row[0], total_cost=row[2], currency=row[1] or "USD")
+        ProviderTotalResponse(provider=row[0], total_cost=row[1], currency="USD")
         for row in crud.get_provider_totals_with_currency(session, start, end)
     ]
     tag_coverage = build_tag_hygiene_by_provider(crud.get_entries_in_range(session, start, end), None)

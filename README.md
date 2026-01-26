@@ -1,6 +1,6 @@
-# Unified Cloud Cost Center (UCCC)
+# Unified Cost Center (UCC)
 
-Unified Cloud Cost Center (UCCC) is a lightweight operational cost intelligence dashboard that aggregates cloud costs across AWS, GCP, and Azure into a single schema, API, and UI.
+Unified Cost Center (UCC) is a lightweight operational cost intelligence dashboard that aggregates cloud costs across AWS, GCP, and Azure into a single schema, API, and UI.
 
 It is **not** a financial system of record. The goal is fast visibility, anomaly detection, and tag hygiene.
 
@@ -11,6 +11,7 @@ It is **not** a financial system of record. The goal is fast visibility, anomaly
 - REST API for totals, breakdowns, anomalies, tag hygiene, and data freshness
 - Gravitee-themed UI dashboard
 - Slack anomaly alerts (worker)
+- Daily ECB FX rate sync to normalize costs to USD
 
 ## Architecture
 
@@ -45,7 +46,7 @@ Create a `.env` file (ignored by git) with your credentials and settings.
 
 ## Step 0: Cloud Access Setup
 
-You must grant read-only billing access before UCCC can collect costs.
+You must grant read-only billing access before UCC can collect costs.
 
 ### Azure (MCA or Subscription)
 
@@ -54,7 +55,7 @@ You must grant read-only billing access before UCCC can collect costs.
 az login
 
 # Create SP without assignments (recommended)
-az ad sp create-for-rbac --name uccc-cost --skip-assignment
+az ad sp create-for-rbac --name ucc-cost --skip-assignment
 ```
 
 **Assign Cost Management Reader**
@@ -108,12 +109,12 @@ AZURE_SUBSCRIPTION_IDS=sub-id-1,sub-id-2
 **Create role (recommended)**
 ```bash
 aws iam create-role \
-  --role-name UCCC-CostExplorer-Role \
+  --role-name UCC-CostExplorer-Role \
   --assume-role-policy-document file://trust.json
 
 aws iam attach-role-policy \
-  --role-name UCCC-CostExplorer-Role \
-  --policy-arn arn:aws:iam::<ACCOUNT_ID>:policy/UCCC-CostExplorer-Read
+  --role-name UCC-CostExplorer-Role \
+  --policy-arn arn:aws:iam::<ACCOUNT_ID>:policy/UCC-CostExplorer-Read
 ```
 
 Example trust policy (`trust.json`) for same-account usage:
@@ -132,11 +133,11 @@ Example trust policy (`trust.json`) for same-account usage:
 
 Set in `.env`:
 ```
-AWS_ROLE_ARN=arn:aws:iam::<ACCOUNT_ID>:role/UCCC-CostExplorer-Role
+AWS_ROLE_ARN=arn:aws:iam::<ACCOUNT_ID>:role/UCC-CostExplorer-Role
 AWS_REGION=us-east-1
 ```
 
-UCCC uses your local AWS CLI credentials by mounting `~/.aws` into containers.
+UCC uses your local AWS CLI credentials by mounting `~/.aws` into containers.
 
 ### Common
 
@@ -166,12 +167,12 @@ AZURE_DEFAULT_CURRENCY=USD
 
 ### AWS (Cost Explorer)
 
-UCCC uses your local AWS CLI credentials by mounting `~/.aws` into the containers.
+UCC uses your local AWS CLI credentials by mounting `~/.aws` into the containers.
 
 ```
 AWS_PROFILE=default
 AWS_REGION=us-east-1
-AWS_ROLE_ARN=arn:aws:iam::<account-id>:role/UCCC-CostExplorer-Role
+AWS_ROLE_ARN=arn:aws:iam::<account-id>:role/UCC-CostExplorer-Role
 AWS_EXTERNAL_ID=optional-if-required
 AWS_COST_METRIC=UnblendedCost
 ```

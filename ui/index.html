@@ -3,178 +3,148 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Unified Cloud Cost Center</title>
+    <title>Unified Cost Center</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="backdrop"></div>
     <main class="app">
-      <div id="errorBanner" class="error-banner is-hidden"></div>
       <header class="hero">
         <div>
-          <p class="eyebrow">Unified Cloud Cost Center</p>
-          <h1>One pane of glass for cloud spend.</h1>
-          <p class="subtitle">
-            Daily costs across AWS, GCP, and Azure. Fast signals for owners, anomalies, and tag hygiene.
-          </p>
+          <p class="eyebrow">Unified Cost Center</p>
+          <h1>Main Menu</h1>
+          <p class="subtitle">Choose an area to explore engineering spend.</p>
         </div>
       </header>
 
-      <section class="summary">
-        <div class="card highlight">
-          <h2>Today</h2>
-          <p class="metric" id="todayTotal">—</p>
-          <span class="caption">Total cost</span>
-          <div class="summary-split" id="todaySplit"></div>
+      <section class="landing">
+        <div class="landing-actions">
+          <a class="action-card" href="dashboard.html#overview">Hosting</a>
+          <a class="action-card" href="ai.html">AI</a>
+          <a class="action-card" href="third-parties.html">3rd parties</a>
         </div>
-        <div class="card">
-          <h2>Last 7 days</h2>
-          <p class="metric" id="weekTotal">—</p>
-          <span class="caption">Rolling spend</span>
-          <div class="summary-split" id="weekSplit"></div>
-        </div>
-        <div class="card">
-          <h2>This month</h2>
-          <p class="metric" id="monthTotal">—</p>
-          <span class="caption">Month-to-date</span>
-          <div class="summary-split" id="monthSplit"></div>
-        </div>
-      </section>
-
-      <section class="panel freshness-panel">
-        <div class="freshness-header">
-          <h3>Data Freshness</h3>
-          <p class="caption">Latest cost day and ingestion time per provider.</p>
-        </div>
-        <div id="freshnessList" class="freshness-list"></div>
-      </section>
-
-      <section class="panel signals-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Critical Signals</h3>
-            <p class="caption">Largest cost spikes for the selected provider and range.</p>
+        <div class="panel landing-widget">
+          <h3>Total engineering spend</h3>
+          <div class="spend-grid">
+          <div class="spend-item">
+            <span>This month (forecast)</span>
+            <strong id="engineeringSpendForecast">—</strong>
           </div>
-        </div>
-        <div id="signalsList" class="signals-list"></div>
-      </section>
-
-      <section class="filter-bar">
-        <div class="filter-group">
-          <div class="tab-group">
-            <button class="tab-btn is-active" data-provider="aws">AWS</button>
-            <button class="tab-btn" data-provider="azure">Azure</button>
-          </div>
-          <div class="search-field">
-            <input type="search" id="searchInput" placeholder="Search service or account" />
-            <span class="search-scope">Scope: service + account</span>
-          </div>
-        </div>
-        <div class="time-controls">
-          <label>
-            From
-            <input type="date" id="fromDate" />
-          </label>
-          <label>
-            To
-            <input type="date" id="toDate" />
-          </label>
-          <button id="refreshBtn">Refresh</button>
-        </div>
-      </section>
-
-      <section class="grid insights global-insights">
-        <div class="panel span-full">
-          <h3>Cost Trend (30 days)</h3>
-          <div class="sparkline-wrap">
-            <svg id="costSparkline" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
-          </div>
-          <p class="caption">Total daily cost across providers.</p>
-        </div>
-      </section>
-
-      <section class="panel breakdowns-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Breakdowns</h3>
-            <p class="caption">Services and accounts, filtered by provider.</p>
-          </div>
-        </div>
-        <div id="providerSummary" class="summary-split"></div>
-        <div class="breakdown-columns">
-          <div>
-            <div class="panel-header small">
-              <h4>Top Services</h4>
-              <div class="pager">
-                <button class="pager-btn" data-svc="prev">Prev</button>
-                <span id="servicePage">Page 1</span>
-                <button class="pager-btn" data-svc="next">Next</button>
+          <div class="spend-split">
+            <div class="spend-split-header">
+              <span>Forecast split</span>
+              <strong id="engineeringSpendSplitLabel">—</strong>
+            </div>
+            <div class="spend-split-bar" aria-label="Forecast split">
+              <div class="spend-split-fill spent" id="engineeringSpendSplitSpent">
+                <span id="engineeringSpendSplitSpentPct">—</span>
               </div>
             </div>
-            <ul id="breakdownServices" class="list"></ul>
-          </div>
-          <div>
-            <div class="panel-header small">
-              <h4>Top Accounts</h4>
-              <div class="pager">
-                <button class="pager-btn" data-acct="prev">Prev</button>
-                <span id="accountPage">Page 1</span>
-                <button class="pager-btn" data-acct="next">Next</button>
-              </div>
+            <div class="spend-split-legend">
+              <span class="legend-item"><span class="legend-dot spent"></span>Spent</span>
+              <span class="legend-item"><span class="legend-dot remaining"></span>Remaining</span>
             </div>
-            <ul id="breakdownAccounts" class="list"></ul>
+          </div>
+          <div class="spend-item">
+            <span>Previous month</span>
+            <strong id="engineeringSpendPrevious">—</strong>
+          </div>
+          <div class="spend-item">
+            <span>Month to date</span>
+            <strong id="engineeringSpendMTD">—</strong>
           </div>
         </div>
-      </section>
-
-      <section class="grid insights provider-insights">
-        <div class="panel">
-          <h3>Top Cost Drivers</h3>
-          <div class="provider-group">
-            <h4>Services</h4>
-            <ul id="topServices" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Accounts</h4>
-            <ul id="topAccounts" class="list"></ul>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>Momentum</h3>
-          <div class="metric-row">
-            <span>Week over week</span>
-            <strong id="wowDelta">—</strong>
-          </div>
-          <div class="metric-row">
-            <span>Month over month</span>
-            <strong id="momDelta">—</strong>
-          </div>
-          <p class="caption">Shows change vs prior period for the selected provider (last 7 days vs previous 7, month-to-date vs prior month).</p>
-        </div>
-        <div class="panel">
-          <h3>Top Movers</h3>
-          <div class="provider-group">
-            <h4>Services</h4>
-            <ul id="topServiceDeltas" class="list"></ul>
-          </div>
-          <div class="provider-group">
-            <h4>Accounts</h4>
-            <ul id="topAccountDeltas" class="list"></ul>
-          </div>
-          <p class="caption">Compares the selected range to the previous period.</p>
-        </div>
-        <div class="panel timeline-panel">
-          <h3>Anomaly Timeline (14 days)</h3>
-          <div id="timelineHeatmap" class="timeline-heatmap"></div>
-          <p id="timelineMeta" class="caption">Baseline: —</p>
-        </div>
-        <div class="panel">
-          <h3>Anomalies</h3>
-          <ul id="anomalies" class="list"></ul>
-        </div>
+        <p class="caption">Forecast uses average daily spend from month-to-date.</p>
+      </div>
       </section>
     </main>
+    <script>
+      const API_BASE = "http://localhost:8000";
+      const spendForecastEl = document.getElementById("engineeringSpendForecast");
+      const spendPreviousEl = document.getElementById("engineeringSpendPrevious");
+      const spendMtdEl = document.getElementById("engineeringSpendMTD");
+      const spendSplitSpentEl = document.getElementById("engineeringSpendSplitSpent");
+      const spendSplitLabelEl = document.getElementById("engineeringSpendSplitLabel");
+      const spendSplitSpentPctEl = document.getElementById("engineeringSpendSplitSpentPct");
 
-    <script src="app.js"></script>
+      function formatCost(value, currency = "USD") {
+        const formatter = new Intl.NumberFormat(undefined, {
+          style: "currency",
+          currency,
+          notation: value >= 10000 ? "compact" : "standard",
+          maximumFractionDigits: value >= 10000 ? 1 : 2,
+        });
+        return formatter.format(value);
+      }
+
+      async function fetchJson(path) {
+        const apiKey = localStorage.getItem("uccc_api_key");
+        const response = await fetch(`${API_BASE}${path}`, {
+          headers: apiKey ? { "X-API-Key": apiKey } : {},
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch ${path}`);
+        }
+        return response.json();
+      }
+
+      function toISODate(value) {
+        return value.toISOString().slice(0, 10);
+      }
+
+      function getMonthStart(value) {
+        return new Date(value.getFullYear(), value.getMonth(), 1);
+      }
+
+      function getMonthEnd(value) {
+        return new Date(value.getFullYear(), value.getMonth() + 1, 0);
+      }
+
+      async function loadEngineeringSpend() {
+        if (
+          !spendForecastEl ||
+          !spendPreviousEl ||
+          !spendMtdEl ||
+          !spendSplitSpentEl ||
+          !spendSplitLabelEl ||
+          !spendSplitSpentPctEl
+        ) {
+          return;
+        }
+        const today = new Date();
+        const monthStart = getMonthStart(today);
+        const monthEnd = getMonthEnd(today);
+        const prevMonthStart = getMonthStart(new Date(today.getFullYear(), today.getMonth() - 1, 1));
+        const prevMonthEnd = getMonthEnd(new Date(today.getFullYear(), today.getMonth() - 1, 1));
+        try {
+          const [mtd, previous] = await Promise.all([
+            fetchJson(`/costs/total?from=${toISODate(monthStart)}&to=${toISODate(today)}`),
+            fetchJson(`/costs/total?from=${toISODate(prevMonthStart)}&to=${toISODate(prevMonthEnd)}`),
+          ]);
+          const daysElapsed = Math.max(1, today.getDate());
+          const daysInMonth = monthEnd.getDate();
+          const mtdTotal = mtd.total_cost || 0;
+          const forecast = (mtdTotal / daysElapsed) * daysInMonth;
+          const remaining = Math.max(0, forecast - mtdTotal);
+          const spentPct = forecast > 0 ? Math.min(100, (mtdTotal / forecast) * 100) : 0;
+          spendMtdEl.textContent = formatCost(mtdTotal, "USD");
+          spendPreviousEl.textContent = formatCost(previous.total_cost || 0, "USD");
+          spendForecastEl.textContent = formatCost(forecast, "USD");
+          spendSplitSpentEl.style.width = `${spentPct.toFixed(1)}%`;
+          spendSplitLabelEl.textContent = `${formatCost(mtdTotal, "USD")} spent · ${formatCost(remaining, "USD")} remaining`;
+          spendSplitSpentPctEl.textContent = `${spentPct.toFixed(0)}%`;
+        } catch (error) {
+          console.error(error);
+          spendMtdEl.textContent = "—";
+          spendPreviousEl.textContent = "—";
+          spendForecastEl.textContent = "—";
+          spendSplitLabelEl.textContent = "—";
+          spendSplitSpentEl.style.width = "0%";
+          spendSplitSpentPctEl.textContent = "—";
+        }
+      }
+
+      loadEngineeringSpend();
+    </script>
   </body>
 </html>
