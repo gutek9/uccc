@@ -15,17 +15,12 @@ const hoursByFrequencyEl = document.getElementById("aiHoursByFrequency");
 const topRoiEl = document.getElementById("aiTopRoi");
 const assumptionsEl = document.getElementById("aiAssumptions");
 const outputEl = document.getElementById("aiOutput");
-const weeksPerMonthInput = document.getElementById("aiWeeksPerMonth");
-const costPerHourInput = document.getElementById("aiCostPerHour");
+const statusEl = document.getElementById("aiStatus");
 const toolCostsListEl = document.getElementById("aiToolCosts");
-const timeSavedListEl = document.getElementById("aiTimeSavedMap");
 const addToolBtn = document.getElementById("aiAddTool");
-const addTimeBtn = document.getElementById("aiAddTimeMap");
 
 const MAX_ROWS = 50000;
 const DEFAULT_CONFIG = {
-  weeksPerMonth: 4.33,
-  avgEngineerCostPerHour: 80,
   toolCosts: [
     { name: "Cursor", monthly_cost_usd: 20 },
     { name: "Claude Code (Anthropic)", monthly_cost_usd: 30 },
@@ -33,18 +28,21 @@ const DEFAULT_CONFIG = {
     { name: "ChatGPT Plus", monthly_cost_usd: 20 },
     { name: "Antigravity", monthly_cost_usd: 0 },
   ],
-  timeSavedMap: [
-    { label: "Less than 1 hour", hours: 0.5 },
-    { label: "0 - 1 hour", hours: 0.5 },
-    { label: "1 - 3 hours", hours: 2 },
-    { label: "3 - 5 hours", hours: 4 },
-    { label: "More than 5 hours", hours: 6 },
-    { label: "I do not feel they save me time", hours: 0 },
-  ],
 };
 
 let lastParsedData = null;
 let lastFilename = "";
+
+const WEEKS_PER_MONTH = 4.33;
+const AVG_ENGINEER_COST_PER_HOUR = 80;
+const TIME_SAVED_DEFAULTS = [
+  { label: "Less than 1 hour", hours: 0.5 },
+  { label: "0 - 1 hour", hours: 0.5 },
+  { label: "1 - 3 hours", hours: 2 },
+  { label: "3 - 5 hours", hours: 4 },
+  { label: "More than 5 hours", hours: 6 },
+  { label: "I do not feel they save me time", hours: 0 },
+];
 
 function formatCost(value, currency = "USD") {
   const formatter = new Intl.NumberFormat(undefined, {
@@ -255,7 +253,9 @@ function createConfigRow({ labelValue = "", numberValue = "", numberStep = "1", 
   };
 
   labelInput.addEventListener("input", handleInput);
+  labelInput.addEventListener("change", handleInput);
   numberInput.addEventListener("input", handleInput);
+  numberInput.addEventListener("change", handleInput);
   removeBtn.addEventListener("click", () => {
     row.remove();
     handleInput();
@@ -268,41 +268,37 @@ function createConfigRow({ labelValue = "", numberValue = "", numberStep = "1", 
 }
 
 function getConfigFromUI() {
-  const weeksPerMonth = parseFloat(weeksPerMonthInput.value) || DEFAULT_CONFIG.weeksPerMonth;
-  const avgEngineerCostPerHour =
-    parseFloat(costPerHourInput.value) || DEFAULT_CONFIG.avgEngineerCostPerHour;
-
-  const toolCosts = Array.from(toolCostsListEl.querySelectorAll(".ai-config-row")).map((row) => {
-    const inputs = row.querySelectorAll("input");
+  if (!toolCostsListEl) {
     return {
-      name: inputs[0].value.trim(),
-      monthly_cost_usd: parseFloat(inputs[1].value) || 0,
+      toolCosts: DEFAULT_CONFIG.toolCosts,
+      timeSavedMap: TIME_SAVED_DEFAULTS,
     };
-  });
+  }
 
-  const timeSavedMap = Array.from(timeSavedListEl.querySelectorAll(".ai-config-row")).map(
-    (row) => {
+  const toolCosts = Array.from(toolCostsListEl.querySelectorAll(".ai-config-row"))
+    .map((row) => {
       const inputs = row.querySelectorAll("input");
+      if (!inputs || inputs.length < 2) {
+        return null;
+      }
       return {
-        label: inputs[0].value.trim(),
-        hours: parseFloat(inputs[1].value) || 0,
+        name: inputs[0].value.trim(),
+        monthly_cost_usd: parseFloat(inputs[1].value) || 0,
       };
-    }
-  );
+    })
+    .filter(Boolean);
 
   return {
-    weeksPerMonth,
-    avgEngineerCostPerHour,
     toolCosts: toolCosts.filter((entry) => entry.name),
-    timeSavedMap: timeSavedMap.filter((entry) => entry.label),
+    timeSavedMap: TIME_SAVED_DEFAULTS,
   };
 }
 
 function applyDefaultConfig() {
-  weeksPerMonthInput.value = DEFAULT_CONFIG.weeksPerMonth;
-  costPerHourInput.value = DEFAULT_CONFIG.avgEngineerCostPerHour;
+  if (!toolCostsListEl) {
+    return;
+  }
   toolCostsListEl.innerHTML = "";
-  timeSavedListEl.innerHTML = "";
 
   DEFAULT_CONFIG.toolCosts.forEach((tool) => {
     toolCostsListEl.appendChild(
@@ -310,17 +306,6 @@ function applyDefaultConfig() {
         labelValue: tool.name,
         numberValue: tool.monthly_cost_usd,
         numberStep: "1",
-        onChange: handleConfigChange,
-      })
-    );
-  });
-
-  DEFAULT_CONFIG.timeSavedMap.forEach((entry) => {
-    timeSavedListEl.appendChild(
-      createConfigRow({
-        labelValue: entry.label,
-        numberValue: entry.hours,
-        numberStep: "0.1",
         onChange: handleConfigChange,
       })
     );
@@ -345,8 +330,8 @@ function updateError(message) {
 
 function summarizeSurvey(data, filename, config) {
   const resolvedConfig = config || getConfigFromUI();
-  const weeksPerMonth = resolvedConfig.weeksPerMonth;
-  const avgEngineerCostPerHour = resolvedConfig.avgEngineerCostPerHour;
+  const weeksPerMonth = WEEKS_PER_MONTH;
+  const avgEngineerCostPerHour = AVG_ENGINEER_COST_PER_HOUR;
   const toolCostMap = new Map();
   const timeSavedLookup = new Map();
 
@@ -354,10 +339,15 @@ function summarizeSurvey(data, filename, config) {
     if (!tool.name) {
       return;
     }
-    toolCostMap.set(normalizeToolKey(tool.name), tool.monthly_cost_usd || 0);
+    const primaryKey = normalizeToolKey(tool.name);
+    toolCostMap.set(primaryKey, tool.monthly_cost_usd || 0);
+    const aliased = normalizeToolAlias(tool.name);
+    if (aliased && normalizeToolKey(aliased) !== primaryKey) {
+      toolCostMap.set(normalizeToolKey(aliased), tool.monthly_cost_usd || 0);
+    }
   });
 
-  resolvedConfig.timeSavedMap.forEach((entry) => {
+  (resolvedConfig.timeSavedMap || TIME_SAVED_DEFAULTS).forEach((entry) => {
     if (!entry.label) {
       return;
     }
@@ -394,8 +384,13 @@ function summarizeSurvey(data, filename, config) {
   const productivityIndex = findColumn(headers, ["productivity", "rating", "self reported", "likert"]);
 
   if (toolsIndex === -1 || frequencyIndex === -1 || timeSavedIndex === -1) {
+    const headerList = headers
+      .map((header) => String(header || "").trim())
+      .filter(Boolean)
+      .slice(0, 8)
+      .join(" | ");
     updateError(
-      "Missing required columns. Include tools used, usage frequency, and time saved per week headers."
+      `Missing required columns. Expected tools used, usage frequency, and time saved per week. Found headers: ${headerList}`
     );
     return;
   }
@@ -504,6 +499,9 @@ function summarizeSurvey(data, filename, config) {
   resultsEl.classList.remove("is-hidden");
   fileMetaEl.textContent = `${filename} - ${respondentCount} respondents`;
   summaryMetaEl.textContent = `Parsed ${respondentCount} responses${rows.length === MAX_ROWS ? " (showing first 50k)" : ""}.`;
+  if (statusEl) {
+    statusEl.textContent = `${filename} loaded. ${respondentCount} responses parsed. Applied ${resolvedConfig.toolCosts.length} tool prices.`;
+  }
   totalSpendEl.textContent = formatCost(totalCost, "USD");
   unknownToolsEl.textContent = `Unknown tools: ${unknownTools.size}`;
   totalValueEl.textContent = formatCost(totalValue, "USD");
@@ -540,7 +538,7 @@ function summarizeSurvey(data, filename, config) {
     `Average engineer cost per hour: ${formatCost(avgEngineerCostPerHour, "USD")}`,
     `Tool costs: ${resolvedConfig.toolCosts.length} configured`,
     `Unknown tool costs treated as USD 0`,
-    `Weekly time saved uses configured midpoints`,
+    `Weekly time saved uses fixed midpoints`,
     `Monthly value allocated equally across tools used by each engineer`,
     `Results are directional estimates, not accounting-grade`,
   ];
@@ -611,24 +609,46 @@ function handleFile(file) {
   if (!file) {
     return;
   }
+  if (statusEl) {
+    statusEl.textContent = `Loading ${file.name}...`;
+  }
   const reader = new FileReader();
   reader.onload = () => {
-    const text = reader.result;
-    if (typeof text !== "string") {
-      updateError("Unable to read file contents.");
-      return;
+    try {
+      const text = reader.result;
+      if (typeof text !== "string") {
+        updateError("Unable to read file contents.");
+        if (statusEl) {
+          statusEl.textContent = `Failed to read ${file.name}.`;
+        }
+        return;
+      }
+      const parsed = parseCSV(text);
+      if (!parsed.length) {
+        updateError("CSV appears to be empty.");
+        if (statusEl) {
+          statusEl.textContent = `Failed to read ${file.name}.`;
+        }
+        return;
+      }
+      if (statusEl) {
+        statusEl.textContent = `Parsing ${file.name}...`;
+      }
+      lastParsedData = parsed;
+      lastFilename = file.name;
+      summarizeSurvey(parsed, file.name, getConfigFromUI());
+    } catch (error) {
+      updateError(`Failed to parse CSV: ${error.message || error}`);
+      if (statusEl) {
+        statusEl.textContent = `Failed to parse ${file.name}.`;
+      }
     }
-    const parsed = parseCSV(text);
-    if (!parsed.length) {
-      updateError("CSV appears to be empty.");
-      return;
-    }
-    lastParsedData = parsed;
-    lastFilename = file.name;
-    summarizeSurvey(parsed, file.name, getConfigFromUI());
   };
   reader.onerror = () => {
     updateError("Failed to read file. Please try again.");
+    if (statusEl) {
+      statusEl.textContent = `Failed to read ${file.name}.`;
+    }
   };
   reader.readAsText(file);
 }
@@ -660,13 +680,10 @@ if (fileInput) {
 }
 
 function initConfigPanel() {
-  if (!weeksPerMonthInput || !costPerHourInput) {
+  if (!toolCostsListEl) {
     return;
   }
   applyDefaultConfig();
-
-  weeksPerMonthInput.addEventListener("input", handleConfigChange);
-  costPerHourInput.addEventListener("input", handleConfigChange);
 
   if (addToolBtn) {
     addToolBtn.addEventListener("click", () => {
@@ -680,19 +697,10 @@ function initConfigPanel() {
       );
     });
   }
-
-  if (addTimeBtn) {
-    addTimeBtn.addEventListener("click", () => {
-      timeSavedListEl.appendChild(
-        createConfigRow({
-          labelValue: "",
-          numberValue: "",
-          numberStep: "0.1",
-          onChange: handleConfigChange,
-        })
-      );
-    });
-  }
 }
 
-initConfigPanel();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initConfigPanel);
+} else {
+  initConfigPanel();
+}

@@ -15,6 +15,11 @@
           <h1>AI Costs</h1>
           <p class="subtitle">AI-specific spend insights and trends.</p>
         </div>
+        <nav class="menu compact" aria-label="AI navigation">
+          <a class="menu-card" href="index.html">
+            <span class="menu-title">Back to main menu</span>
+          </a>
+        </nav>
       </header>
 
       <section class="panel">
@@ -38,6 +43,7 @@
             <span>Required: tools used, usage frequency, time saved per week</span>
             <span>Optional: productivity rating, feedback</span>
           </div>
+          <div class="ai-status" id="aiStatus">No file loaded.</div>
           <div class="ai-error is-hidden" id="aiError"></div>
         </div>
       </section>
@@ -46,33 +52,16 @@
         <div class="panel-header">
           <div>
             <h3>Assumptions Config</h3>
-            <p class="caption">Adjust costs and time-saved mappings. Changes apply to the latest upload.</p>
+            <p class="caption">Adjust tool license costs. Changes apply to the latest upload.</p>
           </div>
         </div>
         <div class="ai-config">
-          <div class="ai-config-grid">
-            <label class="ai-config-field">
-              <span>Weeks per month</span>
-              <input id="aiWeeksPerMonth" type="number" min="0" step="0.01" />
-            </label>
-            <label class="ai-config-field">
-              <span>Avg engineer cost per hour (USD)</span>
-              <input id="aiCostPerHour" type="number" min="0" step="1" />
-            </label>
-          </div>
           <div class="ai-config-section">
             <div class="ai-config-header">
               <span>Tool costs (USD per month)</span>
               <button class="ai-add-btn" id="aiAddTool" type="button">Add tool</button>
             </div>
             <div class="ai-config-list" id="aiToolCosts"></div>
-          </div>
-          <div class="ai-config-section">
-            <div class="ai-config-header">
-              <span>Time saved mapping (hours per week)</span>
-              <button class="ai-add-btn" id="aiAddTimeMap" type="button">Add mapping</button>
-            </div>
-            <div class="ai-config-list" id="aiTimeSavedMap"></div>
           </div>
         </div>
       </section>

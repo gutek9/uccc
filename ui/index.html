@@ -15,6 +15,10 @@
           <h1>Main Menu</h1>
           <p class="subtitle">Choose an area to explore engineering spend.</p>
         </div>
+        <div class="hero-actions">
+          <button class="hero-btn" id="collectBtn" data-providers="aws,azure,gcp">Pull data</button>
+          <div class="collector-status" id="collectorStatus">Collector idle.</div>
+        </div>
       </header>
 
       <section class="landing">
@@ -27,17 +31,22 @@
           <h3>Total engineering spend</h3>
           <div class="spend-grid">
           <div class="spend-item">
-            <span>This month (forecast)</span>
-            <strong id="engineeringSpendForecast">—</strong>
+            <span>Year forecast vs YTD</span>
+            <strong id="engineeringSpendYearForecast">—</strong>
+            <div class="spend-breakdown">
+              <span id="engineeringSpendYearHosting">Hosting: —</span>
+              <span id="engineeringSpendYearAI">AI: —</span>
+              <span id="engineeringSpendYearThird">3rd parties: —</span>
+            </div>
           </div>
           <div class="spend-split">
             <div class="spend-split-header">
               <span>Forecast split</span>
-              <strong id="engineeringSpendSplitLabel">—</strong>
+              <strong id="engineeringSpendYearSplitLabel">—</strong>
             </div>
-            <div class="spend-split-bar" aria-label="Forecast split">
-              <div class="spend-split-fill spent" id="engineeringSpendSplitSpent">
-                <span id="engineeringSpendSplitSpentPct">—</span>
+            <div class="spend-split-bar" aria-label="Year forecast split">
+              <div class="spend-split-fill spent" id="engineeringSpendYearSplitSpent">
+                <span id="engineeringSpendYearSplitSpentPct">—</span>
               </div>
             </div>
             <div class="spend-split-legend">
@@ -46,26 +55,95 @@
             </div>
           </div>
           <div class="spend-item">
+            <span>This month (forecast)</span>
+            <strong id="engineeringSpendForecast">—</strong>
+            <div class="spend-breakdown">
+              <span id="engineeringSpendMonthHosting">Hosting: —</span>
+              <span id="engineeringSpendMonthAI">AI: —</span>
+              <span id="engineeringSpendMonthThird">3rd parties: —</span>
+            </div>
+          </div>
+            <div class="spend-split">
+              <div class="spend-split-header">
+                <span>Forecast split</span>
+                <strong id="engineeringSpendSplitLabel">—</strong>
+              </div>
+              <div class="spend-split-bar" aria-label="Forecast split">
+                <div class="spend-split-fill spent" id="engineeringSpendSplitSpent">
+                  <span id="engineeringSpendSplitSpentPct">—</span>
+                </div>
+              </div>
+              <div class="spend-split-legend">
+                <span class="legend-item"><span class="legend-dot spent"></span>Spent</span>
+                <span class="legend-item"><span class="legend-dot remaining"></span>Remaining</span>
+              </div>
+            </div>
+          <div class="spend-item">
             <span>Previous month</span>
             <strong id="engineeringSpendPrevious">—</strong>
+            <div class="spend-breakdown">
+              <span id="engineeringSpendPreviousHosting">Hosting: —</span>
+              <span id="engineeringSpendPreviousAI">AI: —</span>
+              <span id="engineeringSpendPreviousThird">3rd parties: —</span>
+            </div>
           </div>
           <div class="spend-item">
             <span>Month to date</span>
             <strong id="engineeringSpendMTD">—</strong>
+            <div class="spend-breakdown">
+              <span id="engineeringSpendMtdHosting">Hosting: —</span>
+              <span id="engineeringSpendMtdAI">AI: —</span>
+              <span id="engineeringSpendMtdThird">3rd parties: —</span>
+            </div>
           </div>
         </div>
-        <p class="caption">Forecast uses average daily spend from month-to-date.</p>
-      </div>
+          <p class="caption">Forecast uses average daily spend from month-to-date.</p>
+          <div class="trend-block">
+            <div class="panel-header small">
+              <h4>Monthly spend trend</h4>
+              <p class="caption" id="engineeringSpendTrendLabel">Last 6 months</p>
+            </div>
+            <div class="trend-legend" id="engineeringSpendTrendLegend">Line: total monthly spend (USD)</div>
+            <div class="sparkline-wrap">
+              <svg id="engineeringSpendSparkline" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+            </div>
+            <div class="trend-axis" id="engineeringSpendTrendAxis"></div>
+            <div class="trend-list" id="engineeringSpendTrendList"></div>
+          </div>
+        </div>
       </section>
     </main>
     <script>
       const API_BASE = "http://localhost:8000";
+      const collectBtn = document.getElementById("collectBtn");
+      const collectorStatusEl = document.getElementById("collectorStatus");
       const spendForecastEl = document.getElementById("engineeringSpendForecast");
       const spendPreviousEl = document.getElementById("engineeringSpendPrevious");
       const spendMtdEl = document.getElementById("engineeringSpendMTD");
+      const spendYearForecastEl = document.getElementById("engineeringSpendYearForecast");
+      const spendYearSplitLabelEl = document.getElementById("engineeringSpendYearSplitLabel");
+      const spendYearSplitSpentEl = document.getElementById("engineeringSpendYearSplitSpent");
+      const spendYearSplitSpentPctEl = document.getElementById("engineeringSpendYearSplitSpentPct");
+      const spendYearHostingEl = document.getElementById("engineeringSpendYearHosting");
+      const spendYearAIEl = document.getElementById("engineeringSpendYearAI");
+      const spendYearThirdEl = document.getElementById("engineeringSpendYearThird");
       const spendSplitSpentEl = document.getElementById("engineeringSpendSplitSpent");
       const spendSplitLabelEl = document.getElementById("engineeringSpendSplitLabel");
       const spendSplitSpentPctEl = document.getElementById("engineeringSpendSplitSpentPct");
+      const spendMonthHostingEl = document.getElementById("engineeringSpendMonthHosting");
+      const spendMonthAIEl = document.getElementById("engineeringSpendMonthAI");
+      const spendMonthThirdEl = document.getElementById("engineeringSpendMonthThird");
+      const spendPreviousHostingEl = document.getElementById("engineeringSpendPreviousHosting");
+      const spendPreviousAIEl = document.getElementById("engineeringSpendPreviousAI");
+      const spendPreviousThirdEl = document.getElementById("engineeringSpendPreviousThird");
+      const spendMtdHostingEl = document.getElementById("engineeringSpendMtdHosting");
+      const spendMtdAIEl = document.getElementById("engineeringSpendMtdAI");
+      const spendMtdThirdEl = document.getElementById("engineeringSpendMtdThird");
+      const spendTrendLabelEl = document.getElementById("engineeringSpendTrendLabel");
+      const spendTrendLegendEl = document.getElementById("engineeringSpendTrendLegend");
+      const spendSparklineEl = document.getElementById("engineeringSpendSparkline");
+      const spendTrendAxisEl = document.getElementById("engineeringSpendTrendAxis");
+      const spendTrendListEl = document.getElementById("engineeringSpendTrendList");
 
       function formatCost(value, currency = "USD") {
         const formatter = new Intl.NumberFormat(undefined, {
@@ -88,6 +166,20 @@
         return response.json();
       }
 
+      async function postJson(path) {
+        const apiKey = localStorage.getItem("uccc_api_key");
+        const response = await fetch(`${API_BASE}${path}`, {
+          method: "POST",
+          headers: apiKey ? { "X-API-Key": apiKey } : {},
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          const detail = payload.detail || `Failed to post ${path}`;
+          throw new Error(detail);
+        }
+        return response.json();
+      }
+
       function toISODate(value) {
         return value.toISOString().slice(0, 10);
       }
@@ -100,11 +192,179 @@
         return new Date(value.getFullYear(), value.getMonth() + 1, 0);
       }
 
+      function getYearStart(value) {
+        return new Date(value.getFullYear(), 0, 1);
+      }
+
+      function getYearEnd(value) {
+        return new Date(value.getFullYear(), 11, 31);
+      }
+
+      function setBreakdown(el, label, value) {
+        if (!el) {
+          return;
+        }
+        el.textContent = `${label}: ${value}`;
+      }
+
+      function renderCollectorStatus(status) {
+        if (!collectorStatusEl) {
+          return;
+        }
+        if (!status) {
+          collectorStatusEl.textContent = "Collector idle.";
+          collectorStatusEl.classList.remove("is-running");
+          return;
+        }
+        const state = status.state || "queued";
+        const sources = status.sources || {};
+        const sourceLines = Object.entries(sources)
+          .map(([name, info]) => {
+            const sourceState = info.state || "pending";
+            const entries = info.entries || 0;
+            return `${name}: ${sourceState}${entries ? ` (${entries} entries)` : ""}`;
+          })
+          .join(" | ");
+        collectorStatusEl.textContent = `${state.toUpperCase()}: ${sourceLines || "Starting..."}`;
+        if (state === "running" || state === "queued") {
+          collectorStatusEl.classList.add("is-running");
+        } else {
+          collectorStatusEl.classList.remove("is-running");
+        }
+      }
+
+      async function pollCollector(runId) {
+        if (!runId) {
+          return;
+        }
+        let keepPolling = true;
+        while (keepPolling) {
+          const status = await fetchJson(`/collectors/status/${runId}`);
+          renderCollectorStatus(status);
+          if (status.state === "success" || status.state === "error") {
+            keepPolling = false;
+            break;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      }
+
+      async function triggerCollection() {
+        if (!collectBtn) {
+          return;
+        }
+        const providersRaw = collectBtn.dataset.providers || "aws,azure";
+        const providerList = providersRaw
+          .split(",")
+          .map((provider) => provider.trim())
+          .filter(Boolean);
+        const query = providerList.map((provider) => `providers=${encodeURIComponent(provider)}`).join("&");
+        try {
+          collectBtn.disabled = true;
+          renderCollectorStatus({ state: "queued", sources: {} });
+          const response = await postJson(`/collectors/run?${query}`);
+          await pollCollector(response.run_id);
+          loadEngineeringSpend();
+          loadMonthlyTrend();
+        } catch (error) {
+          if (collectorStatusEl) {
+            collectorStatusEl.textContent = `ERROR: ${error.message}`;
+            collectorStatusEl.classList.remove("is-running");
+          }
+        } finally {
+          collectBtn.disabled = false;
+        }
+      }
+
+      function formatMonthLabel(value) {
+        return value.toLocaleString(undefined, { month: "short", year: "numeric" });
+      }
+
+      function renderSparkline(points) {
+        if (!spendSparklineEl) {
+          return;
+        }
+        spendSparklineEl.innerHTML = "";
+        if (!points.length) {
+          return;
+        }
+        const width = 300;
+        const height = 120;
+        const max = Math.max(...points);
+        const min = Math.min(...points);
+        const range = max - min || 1;
+        const step = width / (points.length - 1 || 1);
+        const path = points
+          .map((value, idx) => {
+            const x = idx * step;
+            const y = height - ((value - min) / range) * (height - 10) - 5;
+            return `${idx === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`;
+          })
+          .join(" ");
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        line.setAttribute("d", path);
+        line.setAttribute("fill", "none");
+        line.setAttribute("stroke", "#e35137");
+        line.setAttribute("stroke-width", "2");
+        spendSparklineEl.appendChild(line);
+      }
+
+      function renderTrendList(rows) {
+        if (!spendTrendListEl) {
+          return;
+        }
+        spendTrendListEl.innerHTML = "";
+        if (!rows.length) {
+          spendTrendListEl.innerHTML = "<div class=\"caption\">No data</div>";
+          return;
+        }
+        const list = document.createElement("div");
+        list.className = "trend-items";
+        rows.forEach((row) => {
+          const item = document.createElement("div");
+          item.className = "trend-item";
+          item.innerHTML = `<span>${row.label}</span><strong>${formatCost(row.total, "USD")}</strong>`;
+          list.appendChild(item);
+        });
+        spendTrendListEl.appendChild(list);
+      }
+
+      function renderTrendAxis(labels) {
+        if (!spendTrendAxisEl) {
+          return;
+        }
+        spendTrendAxisEl.innerHTML = "";
+        if (!labels.length) {
+          return;
+        }
+        labels.forEach((label) => {
+          const item = document.createElement("span");
+          item.textContent = label;
+          spendTrendAxisEl.appendChild(item);
+        });
+      }
+
       async function loadEngineeringSpend() {
         if (
           !spendForecastEl ||
           !spendPreviousEl ||
           !spendMtdEl ||
+          !spendYearForecastEl ||
+          !spendYearSplitLabelEl ||
+          !spendYearSplitSpentEl ||
+          !spendYearSplitSpentPctEl ||
+          !spendYearHostingEl ||
+          !spendYearAIEl ||
+          !spendYearThirdEl ||
+          !spendMonthHostingEl ||
+          !spendMonthAIEl ||
+          !spendMonthThirdEl ||
+          !spendPreviousHostingEl ||
+          !spendPreviousAIEl ||
+          !spendPreviousThirdEl ||
+          !spendMtdHostingEl ||
+          !spendMtdAIEl ||
+          !spendMtdThirdEl ||
           !spendSplitSpentEl ||
           !spendSplitLabelEl ||
           !spendSplitSpentPctEl
@@ -116,10 +376,13 @@
         const monthEnd = getMonthEnd(today);
         const prevMonthStart = getMonthStart(new Date(today.getFullYear(), today.getMonth() - 1, 1));
         const prevMonthEnd = getMonthEnd(new Date(today.getFullYear(), today.getMonth() - 1, 1));
+        const yearStart = getYearStart(today);
+        const yearEnd = getYearEnd(today);
         try {
-          const [mtd, previous] = await Promise.all([
+          const [mtd, previous, ytd] = await Promise.all([
             fetchJson(`/costs/total?from=${toISODate(monthStart)}&to=${toISODate(today)}`),
             fetchJson(`/costs/total?from=${toISODate(prevMonthStart)}&to=${toISODate(prevMonthEnd)}`),
+            fetchJson(`/costs/total?from=${toISODate(yearStart)}&to=${toISODate(today)}`),
           ]);
           const daysElapsed = Math.max(1, today.getDate());
           const daysInMonth = monthEnd.getDate();
@@ -127,24 +390,114 @@
           const forecast = (mtdTotal / daysElapsed) * daysInMonth;
           const remaining = Math.max(0, forecast - mtdTotal);
           const spentPct = forecast > 0 ? Math.min(100, (mtdTotal / forecast) * 100) : 0;
+          const yearDaysElapsed = Math.max(1, Math.floor((today - yearStart) / 86400000) + 1);
+          const yearDays = Math.floor((yearEnd - yearStart) / 86400000) + 1;
+          const ytdTotal = ytd.total_cost || 0;
+          const yearForecast = (ytdTotal / yearDaysElapsed) * yearDays;
+          const yearRemaining = Math.max(0, yearForecast - ytdTotal);
+          const yearSpentPct = yearForecast > 0 ? Math.min(100, (ytdTotal / yearForecast) * 100) : 0;
           spendMtdEl.textContent = formatCost(mtdTotal, "USD");
           spendPreviousEl.textContent = formatCost(previous.total_cost || 0, "USD");
           spendForecastEl.textContent = formatCost(forecast, "USD");
           spendSplitSpentEl.style.width = `${spentPct.toFixed(1)}%`;
           spendSplitLabelEl.textContent = `${formatCost(mtdTotal, "USD")} spent · ${formatCost(remaining, "USD")} remaining`;
           spendSplitSpentPctEl.textContent = `${spentPct.toFixed(0)}%`;
+          spendYearForecastEl.textContent = formatCost(yearForecast, "USD");
+          spendYearSplitSpentEl.style.width = `${yearSpentPct.toFixed(1)}%`;
+          spendYearSplitLabelEl.textContent = `${formatCost(ytdTotal, "USD")} spent · ${formatCost(yearRemaining, "USD")} remaining`;
+          spendYearSplitSpentPctEl.textContent = `${yearSpentPct.toFixed(0)}%`;
+
+          setBreakdown(spendYearHostingEl, "Hosting", formatCost(yearForecast, "USD"));
+          setBreakdown(spendYearAIEl, "AI", "—");
+          setBreakdown(spendYearThirdEl, "3rd parties", "—");
+          setBreakdown(spendMonthHostingEl, "Hosting", formatCost(forecast, "USD"));
+          setBreakdown(spendMonthAIEl, "AI", "—");
+          setBreakdown(spendMonthThirdEl, "3rd parties", "—");
+          setBreakdown(spendPreviousHostingEl, "Hosting", formatCost(previous.total_cost || 0, "USD"));
+          setBreakdown(spendPreviousAIEl, "AI", "—");
+          setBreakdown(spendPreviousThirdEl, "3rd parties", "—");
+          setBreakdown(spendMtdHostingEl, "Hosting", formatCost(mtdTotal, "USD"));
+          setBreakdown(spendMtdAIEl, "AI", "—");
+          setBreakdown(spendMtdThirdEl, "3rd parties", "—");
         } catch (error) {
           console.error(error);
           spendMtdEl.textContent = "—";
           spendPreviousEl.textContent = "—";
           spendForecastEl.textContent = "—";
+          spendYearForecastEl.textContent = "—";
+          spendYearSplitSpentEl.style.width = "0%";
+          spendYearSplitLabelEl.textContent = "—";
+          spendYearSplitSpentPctEl.textContent = "—";
+          setBreakdown(spendYearHostingEl, "Hosting", "—");
+          setBreakdown(spendYearAIEl, "AI", "—");
+          setBreakdown(spendYearThirdEl, "3rd parties", "—");
+          setBreakdown(spendMonthHostingEl, "Hosting", "—");
+          setBreakdown(spendMonthAIEl, "AI", "—");
+          setBreakdown(spendMonthThirdEl, "3rd parties", "—");
+          setBreakdown(spendPreviousHostingEl, "Hosting", "—");
+          setBreakdown(spendPreviousAIEl, "AI", "—");
+          setBreakdown(spendPreviousThirdEl, "3rd parties", "—");
+          setBreakdown(spendMtdHostingEl, "Hosting", "—");
+          setBreakdown(spendMtdAIEl, "AI", "—");
+          setBreakdown(spendMtdThirdEl, "3rd parties", "—");
           spendSplitLabelEl.textContent = "—";
           spendSplitSpentEl.style.width = "0%";
           spendSplitSpentPctEl.textContent = "—";
         }
       }
 
+      async function loadMonthlyTrend() {
+        if (!spendSparklineEl || !spendTrendListEl) {
+          return;
+        }
+        const today = new Date();
+        const months = [];
+        for (let idx = 5; idx >= 0; idx -= 1) {
+          const date = new Date(today.getFullYear(), today.getMonth() - idx, 1);
+          const start = getMonthStart(date);
+          const end = idx === 0 ? today : getMonthEnd(date);
+          months.push({ label: formatMonthLabel(start), start, end });
+        }
+        try {
+          const results = await Promise.all(
+            months.map((month) =>
+              fetchJson(`/costs/total?from=${toISODate(month.start)}&to=${toISODate(month.end)}`)
+            )
+          );
+          const rows = results.map((result, index) => ({
+            label: months[index].label,
+            total: result.total_cost || 0,
+          }));
+          renderSparkline(rows.map((row) => row.total));
+          renderTrendList(rows);
+          renderTrendAxis(rows.map((row) => row.label));
+          if (spendTrendLabelEl) {
+            spendTrendLabelEl.textContent = "Last 6 months (current month is MTD)";
+          }
+          if (spendTrendLegendEl) {
+            const max = rows.reduce((acc, row) => Math.max(acc, row.total), 0);
+            const min = rows.reduce((acc, row) => Math.min(acc, row.total), rows[0]?.total ?? 0);
+            spendTrendLegendEl.textContent = `Line: total monthly spend (USD). Range ${formatCost(min, "USD")} – ${formatCost(max, "USD")}.`;
+          }
+        } catch (error) {
+          console.error(error);
+          renderSparkline([]);
+          renderTrendList([]);
+          renderTrendAxis([]);
+          if (spendTrendLabelEl) {
+            spendTrendLabelEl.textContent = "Unable to load trend";
+          }
+          if (spendTrendLegendEl) {
+            spendTrendLegendEl.textContent = "Line: total monthly spend (USD)";
+          }
+        }
+      }
+
       loadEngineeringSpend();
+      loadMonthlyTrend();
+      if (collectBtn) {
+        collectBtn.addEventListener("click", triggerCollection);
+      }
     </script>
   </body>
 </html>

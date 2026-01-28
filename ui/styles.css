@@ -72,6 +72,24 @@ body {
   gap: 24px;
 }
 
+.hero-actions {
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  justify-items: start;
+}
+
+.hero-btn {
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fffaf6;
+  padding: 10px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(227, 81, 55, 0.35);
+}
+
 .menu {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -147,6 +165,49 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
+}
+
+.trend-block {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.trend-legend {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.trend-axis {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.trend-items {
+  display: grid;
+  gap: 6px;
+}
+
+.trend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.spend-breakdown {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 .action-card {
@@ -433,6 +494,20 @@ body {
   box-shadow: 0 10px 20px rgba(227, 81, 55, 0.35);
 }
 
+.collector-status {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #2e2727;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.collector-status.is-running {
+  border-color: rgba(227, 81, 55, 0.4);
+  color: #f6d7d1;
+}
+
 .summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -614,28 +689,6 @@ body {
   gap: 16px;
 }
 
-.ai-config-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
-.ai-config-field {
-  display: grid;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.ai-config-field input {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: 0.9rem;
-  background: #171313;
-  color: var(--ink);
-}
-
 .ai-config-section {
   display: grid;
   gap: 10px;
@@ -744,6 +797,11 @@ body {
   background: rgba(227, 81, 55, 0.12);
   color: #f6d7d1;
   font-size: 0.9rem;
+}
+
+.ai-status {
+  color: var(--muted);
+  font-size: 0.85rem;
 }
 
 .ai-error.is-hidden {
