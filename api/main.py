@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from api.routers import costs, exports, tags
+from api.routers import collectors, costs, exports, tags
 
 app = FastAPI(title="Unified Cost Center")
 app.add_middleware(
@@ -30,3 +30,4 @@ async def api_key_guard(request: Request, call_next):
 app.include_router(costs.router)
 app.include_router(tags.router)
 app.include_router(exports.router)
+app.include_router(collectors.router)

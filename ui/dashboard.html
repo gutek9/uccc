@@ -18,9 +18,15 @@
             Daily costs across AWS, GCP, and Azure. Fast signals for owners, anomalies, and tag hygiene.
           </p>
         </div>
+        <nav class="menu compact" aria-label="Dashboard navigation">
+          <a class="menu-card" href="index.html">
+            <span class="menu-title">Back to main menu</span>
+          </a>
+        </nav>
       </header>
 
       <div class="sticky-shell">
+        <div class="collector-status" id="collectorStatus">Collector idle.</div>
         <nav class="menu compact" aria-label="Dashboard sections">
           <a class="menu-card" href="#overview">
             <span class="menu-title">Overview</span>
@@ -57,6 +63,7 @@
               <input type="date" id="toDate" />
             </label>
             <button id="refreshBtn">Refresh</button>
+            <button id="collectBtn" data-providers="aws,azure">Pull data</button>
           </div>
         </section>
       </div>

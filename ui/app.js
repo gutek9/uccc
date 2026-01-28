@@ -31,6 +31,8 @@ const timelineMetaEl = document.getElementById("timelineMeta");
 const fromInput = document.getElementById("fromDate");
 const toInput = document.getElementById("toDate");
 const refreshBtn = document.getElementById("refreshBtn");
+const collectBtn = document.getElementById("collectBtn");
+const collectorStatusEl = document.getElementById("collectorStatus");
 const searchInput = document.getElementById("searchInput");
 const SERVICE_PAGE_SIZE = 10;
 const ACCOUNT_PAGE_SIZE = 10;
@@ -93,6 +95,20 @@ async function fetchJson(path) {
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch ${path}`);
+  }
+  return response.json();
+}
+
+async function postJson(path) {
+  const apiKey = localStorage.getItem("uccc_api_key");
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: apiKey ? { "X-API-Key": apiKey } : {},
+  });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    const detail = payload.detail || `Failed to post ${path}`;
+    throw new Error(detail);
   }
   return response.json();
 }
@@ -418,6 +434,74 @@ function setActiveProvider(provider) {
   const match = Array.from(tabButtons).find((btn) => btn.dataset.provider === provider);
   if (match) {
     match.classList.add("is-active");
+  }
+}
+
+function renderCollectorStatus(status) {
+  if (!collectorStatusEl) {
+    return;
+  }
+  if (!status) {
+    collectorStatusEl.textContent = "Collector idle.";
+    collectorStatusEl.classList.remove("is-running");
+    return;
+  }
+  const state = status.state || "queued";
+  const sources = status.sources || {};
+  const sourceLines = Object.entries(sources)
+    .map(([name, info]) => {
+      const sourceState = info.state || "pending";
+      const entries = info.entries || 0;
+      return `${name}: ${sourceState}${entries ? ` (${entries} entries)` : ""}`;
+    })
+    .join(" | ");
+  collectorStatusEl.textContent = `${state.toUpperCase()}: ${sourceLines || "Starting..."}`;
+  if (state === "running" || state === "queued") {
+    collectorStatusEl.classList.add("is-running");
+  } else {
+    collectorStatusEl.classList.remove("is-running");
+  }
+}
+
+async function pollCollector(runId) {
+  if (!runId) {
+    return;
+  }
+  let keepPolling = true;
+  while (keepPolling) {
+    const status = await fetchJson(`/collectors/status/${runId}`);
+    renderCollectorStatus(status);
+    if (status.state === "success" || status.state === "error") {
+      keepPolling = false;
+      break;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+}
+
+async function triggerCollection() {
+  if (!collectBtn) {
+    return;
+  }
+  const providersRaw = collectBtn.dataset.providers || "aws,azure";
+  const providerList = providersRaw
+    .split(",")
+    .map((provider) => provider.trim())
+    .filter(Boolean);
+  const query = providerList.map((provider) => `providers=${encodeURIComponent(provider)}`).join("&");
+  try {
+    collectBtn.disabled = true;
+    renderCollectorStatus({ state: "queued", sources: {} });
+    const response = await postJson(`/collectors/run?${query}`);
+    await pollCollector(response.run_id);
+    refreshData();
+  } catch (error) {
+    if (collectorStatusEl) {
+      collectorStatusEl.textContent = `ERROR: ${error.message}`;
+      collectorStatusEl.classList.remove("is-running");
+    }
+  } finally {
+    collectBtn.disabled = false;
   }
 }
 
@@ -775,7 +859,12 @@ function initDateInputs() {
   filterState.to = toInput.value;
 }
 
-refreshBtn.addEventListener("click", refreshData);
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", refreshData);
+}
+if (collectBtn) {
+  collectBtn.addEventListener("click", triggerCollection);
+}
 let searchDebounce = null;
 searchInput.addEventListener("input", () => {
   if (searchDebounce) {
